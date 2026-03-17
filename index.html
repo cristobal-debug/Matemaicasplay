@@ -3,348 +3,216 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<meta name="apple-mobile-web-app-capable" content="yes">
 <title>🌟 Aprende con Sofía 🌟</title>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
 <style>
 :root{
-  --pink:#FF5FAA;--purple:#8B5CF6;--teal:#14B8A6;
-  --yellow:#FBBF24;--orange:#F97316;--green:#22C55E;--red:#EF4444;
-  --bg:#0F0A1E;--card:rgba(255,255,255,.06);--text:#F3E8FF;--muted:#9D88C0;
+  --pk:#FF5FAA;--pu:#8B5CF6;--tl:#14B8A6;
+  --ye:#FBBF24;--or:#F97316;--gr:#22C55E;--rd:#EF4444;
+  --bg:#0F0A1E;--card:rgba(255,255,255,.07);--text:#F3E8FF;--mut:#9D88C0;
   --glow:0 0 50px rgba(139,92,246,.3);
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 html,body{height:100%;overflow:hidden;}
 body{
-  font-family:'Nunito',sans-serif;
-  background:var(--bg);color:var(--text);
-  display:flex;flex-direction:column;
-  touch-action:manipulation;
+  font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);
+  display:flex;flex-direction:column;touch-action:manipulation;
   background-image:
-    radial-gradient(ellipse at 10% 20%,rgba(139,92,246,.18) 0%,transparent 50%),
-    radial-gradient(ellipse at 90% 80%,rgba(255,95,170,.15) 0%,transparent 50%);
+    radial-gradient(ellipse at 10% 20%,rgba(139,92,246,.2) 0%,transparent 50%),
+    radial-gradient(ellipse at 90% 80%,rgba(255,95,170,.17) 0%,transparent 50%);
 }
-
-/* ── STARS ── */
 #stars{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
-.star{position:absolute;border-radius:50%;background:white;
-  animation:twinkle ease-in-out infinite;}
-@keyframes twinkle{0%,100%{opacity:.1;transform:scale(1)}50%{opacity:.8;transform:scale(1.5)}}
+.star{position:absolute;border-radius:50%;background:white;animation:twinkle ease-in-out infinite;}
+@keyframes twinkle{0%,100%{opacity:.1;transform:scale(1)}50%{opacity:.9;transform:scale(1.6)}}
 
 /* ── APP SHELL ── */
-#app{
-  position:relative;z-index:1;
-  display:flex;flex-direction:column;
-  height:100%;max-width:860px;margin:0 auto;
-  padding:12px 14px 8px;gap:8px;
-}
+#app{position:relative;z-index:1;display:flex;flex-direction:column;height:100%;max-width:860px;margin:0 auto;padding:10px 14px 8px;gap:7px;}
 
 /* ── HEADER ── */
 .hdr{display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
-.logo{
-  font-family:'Fredoka One',cursive;
-  font-size:clamp(1.3rem,3.5vw,1.9rem);
-  background:linear-gradient(135deg,var(--pink),var(--purple),var(--teal));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  filter:drop-shadow(0 0 14px rgba(139,92,246,.7));
-}
-.mix-badge{
-  font-size:.72rem;font-weight:800;
-  background:rgba(255,255,255,.08);
-  border:1.5px solid rgba(255,255,255,.14);
-  border-radius:20px;padding:5px 12px;
-  color:var(--muted);
-}
+.logo{font-family:'Fredoka One',cursive;font-size:clamp(1.2rem,3vw,1.8rem);background:linear-gradient(135deg,var(--pk),var(--pu),var(--tl));-webkit-background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 14px rgba(139,92,246,.7));}
+.lvl-badge{font-size:.7rem;font-weight:900;background:rgba(255,255,255,.09);border:1.5px solid rgba(255,255,255,.15);border-radius:20px;padding:5px 12px;color:var(--mut);}
 
 /* ── HUD ── */
-.hud{display:flex;gap:7px;align-items:stretch;flex-shrink:0;}
-.hbox{
-  flex:1;background:rgba(255,255,255,.06);
-  border:1.5px solid rgba(255,255,255,.1);border-radius:14px;
-  padding:7px 8px;display:flex;flex-direction:column;
-  align-items:center;gap:1px;backdrop-filter:blur(8px);
-}
-.hlbl{font-size:.58rem;font-weight:900;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;}
-.hval{font-family:'Fredoka One',cursive;font-size:1.2rem;line-height:1.1;}
+.hud{display:flex;gap:6px;align-items:stretch;flex-shrink:0;}
+.hbox{flex:1;background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.1);border-radius:13px;padding:6px 7px;display:flex;flex-direction:column;align-items:center;gap:1px;backdrop-filter:blur(8px);}
+.hlbl{font-size:.55rem;font-weight:900;color:var(--mut);text-transform:uppercase;letter-spacing:.8px;}
+.hval{font-family:'Fredoka One',cursive;font-size:1.1rem;line-height:1.1;}
 .lives-row{display:flex;gap:1px;flex-wrap:wrap;justify-content:center;}
-.hrt{font-size:.95rem;transition:all .35s;}
-.hrt.lost{opacity:.15;transform:scale(.6);}
-.fire-icon{display:inline-block;animation:fir .6s ease-in-out infinite alternate;}
-@keyframes fir{from{transform:scale(1)}to{transform:scale(1.35)}}
+.hrt{font-size:.9rem;transition:all .35s;}
+.hrt.lost{opacity:.15;transform:scale(.55);}
 
-/* ── SUBJECT PILL ── */
-.subj-pill{
-  flex-shrink:0;text-align:center;
-  padding:7px 0;border-radius:40px;
-  font-family:'Fredoka One',cursive;font-size:clamp(.9rem,2.5vw,1.1rem);
-  animation:pillIn .4s cubic-bezier(.34,1.56,.64,1);
-  border:2px solid transparent;
+/* ── NEURO TOOLBAR ── */
+.neuro-bar{display:flex;gap:6px;justify-content:center;flex-shrink:0;flex-wrap:wrap;}
+.nbadge{
+  font-size:.65rem;font-weight:900;padding:4px 10px;border-radius:50px;
+  border:1.5px solid rgba(255,255,255,.12);cursor:pointer;
+  transition:all .25s;opacity:.5;user-select:none;
 }
-@keyframes pillIn{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:scale(1)}}
-.cat-times{background:rgba(139,92,246,.18);border-color:rgba(139,92,246,.5);color:#C4B5FD;}
-.cat-math {background:rgba(255,95,170,.15);border-color:rgba(255,95,170,.45);color:#FFB3D9;}
-.cat-en   {background:rgba(20,184,166,.15);border-color:rgba(20,184,166,.45);color:#5EEAD4;}
-.cat-bible{background:rgba(251,191,36,.15);border-color:rgba(251,191,36,.45);color:#FDE68A;}
+.nbadge.on{opacity:1;transform:scale(1.05);}
+.nb-space{background:rgba(139,92,246,.2);color:#C4B5FD;border-color:rgba(139,92,246,.4);}
+.nb-hint {background:rgba(251,191,36,.15);color:#FDE68A;border-color:rgba(251,191,36,.4);}
+.nb-timer{background:rgba(20,184,166,.15);color:#5EEAD4;border-color:rgba(20,184,166,.4);}
+.nb-voice{background:rgba(255,95,170,.15);color:#FFB3D9;border-color:rgba(255,95,170,.4);}
 
 /* ── PROGRESS ── */
 .prog{flex-shrink:0;}
-.prog-row{display:flex;justify-content:space-between;
-  font-size:.65rem;font-weight:800;color:var(--muted);margin-bottom:4px;}
-.prog-track{height:7px;background:rgba(255,255,255,.07);border-radius:50px;overflow:hidden;}
-.prog-fill{
-  height:100%;border-radius:50px;
-  background:linear-gradient(90deg,var(--pink),var(--purple),var(--teal));
-  transition:width .6s cubic-bezier(.34,1.56,.64,1);
-}
+.prog-row{display:flex;justify-content:space-between;font-size:.62rem;font-weight:800;color:var(--mut);margin-bottom:4px;}
+.prog-track{height:6px;background:rgba(255,255,255,.07);border-radius:50px;overflow:hidden;}
+.prog-fill{height:100%;border-radius:50px;background:linear-gradient(90deg,var(--pk),var(--pu),var(--tl));transition:width .6s cubic-bezier(.34,1.56,.64,1);}
 
 /* ── QUESTION CARD ── */
-.qcard{
-  flex:1;min-height:0;overflow-y:auto;
-  background:var(--card);border:1.5px solid rgba(255,255,255,.1);
-  border-radius:26px;padding:16px 18px 14px;
-  display:flex;flex-direction:column;
-  backdrop-filter:blur(14px);
-  box-shadow:var(--glow);
-  animation:cardIn .42s cubic-bezier(.34,1.56,.64,1);
-  -webkit-overflow-scrolling:touch;
-}
+.qcard{flex:1;min-height:0;overflow-y:auto;background:var(--card);border:1.5px solid rgba(255,255,255,.1);border-radius:24px;padding:14px 16px 12px;display:flex;flex-direction:column;backdrop-filter:blur(14px);box-shadow:var(--glow);animation:cardIn .4s cubic-bezier(.34,1.56,.64,1);-webkit-overflow-scrolling:touch;}
 @keyframes cardIn{from{opacity:0;transform:scale(.94) translateY(18px)}to{opacity:1;transform:scale(1) translateY(0)}}
 
-/* TIMES MINI */
-.tmini{
-  background:rgba(139,92,246,.1);border:1.5px solid rgba(139,92,246,.28);
-  border-radius:14px;padding:10px 12px;margin-bottom:12px;flex-shrink:0;
-}
-.tmini-t{
-  font-family:'Fredoka One',cursive;color:#C4B5FD;
-  font-size:.88rem;text-align:center;margin-bottom:7px;
-}
-.tmini-g{display:grid;grid-template-columns:repeat(5,1fr);gap:3px;}
-.tcell{
-  background:rgba(255,255,255,.06);border-radius:7px;
-  padding:3px 1px;text-align:center;font-size:.62rem;font-weight:800;
-  color:var(--muted);line-height:1.3;
-}
-.tcell.hl{
-  background:rgba(139,92,246,.4);color:white;
-  border:1px solid rgba(139,92,246,.7);font-size:.7rem;
-  transform:scale(1.06);
-}
+/* ── DIFFCULTY CHIP ── */
+.diff-chip{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-shrink:0;}
+.chip{font-size:.64rem;font-weight:900;padding:3px 10px;border-radius:20px;letter-spacing:.5px;}
+.chip-lv1{background:rgba(34,197,94,.18);color:#86EFAC;}
+.chip-lv2{background:rgba(251,191,36,.15);color:#FDE68A;}
+.chip-lv3{background:rgba(239,68,68,.15);color:#FCA5A5;}
+.timer-ring{font-size:.72rem;font-weight:900;color:var(--tl);}
 
-/* EMOJI */
-.q-em{
-  font-size:clamp(2.8rem,7vw,4rem);
-  text-align:center;display:block;margin-bottom:6px;flex-shrink:0;
-  animation:emPop .45s cubic-bezier(.34,1.56,.64,1);
-}
+/* ── TABLE DISPLAY (adaptive) ── */
+.tmini{background:rgba(139,92,246,.1);border:1.5px solid rgba(139,92,246,.28);border-radius:13px;padding:9px 11px;margin-bottom:10px;flex-shrink:0;}
+.tmini-t{font-family:'Fredoka One',cursive;color:#C4B5FD;font-size:.85rem;text-align:center;margin-bottom:6px;}
+.tmini-g{display:grid;grid-template-columns:repeat(5,1fr);gap:3px;}
+.tcell{background:rgba(255,255,255,.06);border-radius:6px;padding:3px 1px;text-align:center;font-size:.6rem;font-weight:800;color:var(--mut);line-height:1.3;}
+.tcell.hl{background:rgba(139,92,246,.45);color:white;border:1px solid rgba(139,92,246,.7);font-size:.68rem;transform:scale(1.07);}
+
+/* ── MEMORY PALACE (nivel 2 hint) ── */
+.mem-palace{background:rgba(251,191,36,.08);border:1.5px dashed rgba(251,191,36,.3);border-radius:12px;padding:8px 12px;margin-bottom:8px;font-size:.78rem;font-weight:700;color:#FDE68A;text-align:center;flex-shrink:0;}
+
+/* ── SPACED REPETITION BADGE ── */
+.sr-badge{display:inline-block;font-size:.6rem;font-weight:900;background:rgba(20,184,166,.2);color:#5EEAD4;border-radius:8px;padding:2px 7px;margin-left:6px;vertical-align:middle;}
+
+/* ── EMOJI ── */
+.q-em{font-size:clamp(2.4rem,6vw,3.6rem);text-align:center;display:block;margin-bottom:5px;flex-shrink:0;animation:emPop .45s cubic-bezier(.34,1.56,.64,1);}
 @keyframes emPop{from{transform:scale(0) rotate(-20deg)}to{transform:scale(1) rotate(0)}}
 
-/* QUESTION TEXT */
-.qt{
-  font-family:'Fredoka One',cursive;
-  font-size:clamp(1.25rem,3.2vw,1.75rem);
-  line-height:1.3;text-align:center;
-  margin-bottom:10px;flex-shrink:0;white-space:pre-line;
-}
+/* ── QUESTION TEXT ── */
+.qt{font-family:'Fredoka One',cursive;font-size:clamp(1.2rem,3vw,1.65rem);line-height:1.3;text-align:center;margin-bottom:8px;flex-shrink:0;white-space:pre-line;}
 
-/* HINT */
-.qhint{
-  font-size:.76rem;font-weight:800;color:var(--muted);
-  text-align:center;margin-bottom:10px;
-  background:rgba(255,255,255,.05);border-radius:9px;padding:5px 10px;
-  flex-shrink:0;
-}
+/* ── HINT ── */
+.qhint{font-size:.74rem;font-weight:800;color:var(--mut);text-align:center;margin-bottom:8px;background:rgba(255,255,255,.05);border-radius:8px;padding:5px 10px;flex-shrink:0;}
 
 /* ── ANSWERS ── */
-.ans-grid{
-  display:grid;grid-template-columns:1fr 1fr;
-  gap:10px;margin-top:auto;padding-top:8px;flex-shrink:0;
-}
-.abtn{
-  min-height:clamp(60px,10vw,82px);
-  padding:12px 8px 12px 32px;
-  border-radius:18px;border:2.5px solid rgba(255,255,255,.11);
-  background:rgba(255,255,255,.07);
-  font-family:'Fredoka One',cursive;
-  font-size:clamp(.95rem,2.3vw,1.25rem);
-  color:var(--text);cursor:pointer;
-  transition:border-color .15s,background .15s;
-  text-align:center;position:relative;overflow:hidden;
-  display:flex;align-items:center;justify-content:center;
-  user-select:none;
-}
-.abtn .ltr{
-  position:absolute;left:8px;top:50%;transform:translateY(-50%);
-  width:19px;height:19px;border-radius:6px;
-  background:rgba(255,255,255,.1);
-  font-size:.62rem;font-weight:900;color:rgba(255,255,255,.45);
-  display:flex;align-items:center;justify-content:center;
-}
+.ans-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:auto;padding-top:6px;flex-shrink:0;}
+.abtn{min-height:clamp(56px,9vw,76px);padding:10px 8px 10px 30px;border-radius:16px;border:2.5px solid rgba(255,255,255,.11);background:rgba(255,255,255,.07);font-family:'Fredoka One',cursive;font-size:clamp(.9rem,2.2vw,1.18rem);color:var(--text);cursor:pointer;transition:border-color .15s,background .15s;text-align:center;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;user-select:none;}
+.abtn .ltr{position:absolute;left:7px;top:50%;transform:translateY(-50%);width:17px;height:17px;border-radius:5px;background:rgba(255,255,255,.1);font-size:.58rem;font-weight:900;color:rgba(255,255,255,.4);display:flex;align-items:center;justify-content:center;}
 .abtn:active:not(:disabled){transform:scale(.95);}
-.abtn.correct{
-  background:linear-gradient(135deg,#166534,#22C55E);
-  border-color:#22C55E;color:white;
-  box-shadow:0 0 28px rgba(34,197,94,.45);
-  animation:cpop .4s cubic-bezier(.34,1.56,.64,1);
-}
-.abtn.wrong{
-  background:linear-gradient(135deg,#991B1B,#EF4444);
-  border-color:#EF4444;color:white;
-  box-shadow:0 0 28px rgba(239,68,68,.4);
-  animation:wshk .32s ease;
-}
-.abtn.reveal{
-  background:rgba(34,197,94,.13);border-color:rgba(34,197,94,.4);color:#86EFAC;
-}
+.abtn.correct{background:linear-gradient(135deg,#166534,#22C55E);border-color:#22C55E;color:white;box-shadow:0 0 28px rgba(34,197,94,.45);animation:cpop .4s cubic-bezier(.34,1.56,.64,1);}
+.abtn.wrong{background:linear-gradient(135deg,#991B1B,#EF4444);border-color:#EF4444;color:white;box-shadow:0 0 28px rgba(239,68,68,.4);animation:wshk .32s ease;}
+.abtn.reveal{background:rgba(34,197,94,.13);border-color:rgba(34,197,94,.4);color:#86EFAC;}
 @keyframes cpop{0%{transform:scale(1)}45%{transform:scale(1.08)}100%{transform:scale(1)}}
 @keyframes wshk{0%,100%{transform:translateX(0)}25%{transform:translateX(-9px)}75%{transform:translateX(9px)}}
 .abtn:disabled{cursor:default;}
 
 /* ── FEEDBACK ── */
-.fback{
-  flex-shrink:0;border-radius:14px;
-  padding:10px 14px;text-align:center;
-  font-family:'Fredoka One',cursive;
-  font-size:clamp(.9rem,2.2vw,1.15rem);
-  display:none;margin-top:8px;
-  animation:popIn .32s cubic-bezier(.34,1.56,.64,1);
-}
+.fback{flex-shrink:0;border-radius:12px;padding:8px 12px;text-align:center;font-family:'Fredoka One',cursive;font-size:clamp(.85rem,2vw,1.1rem);display:none;margin-top:7px;animation:popIn .32s cubic-bezier(.34,1.56,.64,1);}
 @keyframes popIn{from{transform:scale(.7);opacity:0}to{transform:scale(1);opacity:1}}
 .fback.show{display:block;}
 .fback.good{background:rgba(34,197,94,.18);border:2px solid rgba(34,197,94,.35);color:#86EFAC;}
 .fback.bad{background:rgba(239,68,68,.13);border:2px solid rgba(239,68,68,.28);color:#FCA5A5;}
 
 /* ── NEXT ── */
-.nbtn{
-  flex-shrink:0;padding:clamp(13px,2.8vw,18px);
-  border-radius:18px;border:none;
-  background:linear-gradient(135deg,var(--pink),var(--purple));
-  color:white;font-family:'Fredoka One',cursive;
-  font-size:clamp(1.05rem,2.5vw,1.3rem);
-  cursor:pointer;margin-top:8px;
-  box-shadow:0 5px 24px rgba(139,92,246,.4);
-  display:none;animation:popIn .32s cubic-bezier(.34,1.56,.64,1);
-  transition:transform .14s;
-}
-.nbtn.show{display:block;}
-.nbtn:active{transform:scale(.97);}
+.nxt{flex-shrink:0;padding:clamp(12px,2.5vw,16px);border-radius:16px;border:none;background:linear-gradient(135deg,var(--pk),var(--pu));color:white;font-family:'Fredoka One',cursive;font-size:clamp(1rem,2.3vw,1.25rem);cursor:pointer;margin-top:7px;box-shadow:0 5px 22px rgba(139,92,246,.4);display:none;animation:popIn .32s cubic-bezier(.34,1.56,.64,1);transition:transform .14s;}
+.nxt.show{display:block;}
+.nxt:active{transform:scale(.97);}
+
+/* ── SPACED REP PANEL ── */
+.sr-panel{flex-shrink:0;background:rgba(20,184,166,.08);border:1.5px solid rgba(20,184,166,.25);border-radius:12px;padding:7px 12px;font-size:.7rem;font-weight:800;color:#5EEAD4;text-align:center;display:none;}
+.sr-panel.show{display:block;}
 
 /* ── OVERLAYS ── */
-.overlay{
-  display:none;position:fixed;inset:0;
-  background:rgba(8,4,20,.9);backdrop-filter:blur(14px);
-  z-index:200;align-items:center;justify-content:center;padding:18px;
-}
-.overlay.show{display:flex;}
-.modal{
-  background:linear-gradient(155deg,#1C0E3C,#140A2C);
-  border:2px solid rgba(139,92,246,.4);
-  border-radius:28px;padding:clamp(22px,4vw,40px) clamp(18px,4vw,36px);
-  max-width:440px;width:100%;text-align:center;
-  box-shadow:0 0 80px rgba(139,92,246,.28);
-  animation:popIn .5s cubic-bezier(.34,1.56,.64,1);
-}
-.modal-em{font-size:3.5rem;display:block;margin-bottom:10px;}
-.modal h2{font-family:'Fredoka One',cursive;font-size:clamp(1.5rem,3.5vw,2rem);color:#C4B5FD;margin-bottom:8px;}
-.modal p{color:var(--muted);font-size:.9rem;line-height:1.55;margin-bottom:18px;}
-.pin-row{display:flex;gap:9px;justify-content:center;margin-bottom:12px;}
-.pdig{
-  width:clamp(48px,11vw,62px);height:clamp(54px,12vw,68px);
-  border:2.5px solid rgba(139,92,246,.38);border-radius:14px;
-  background:rgba(139,92,246,.1);
-  font-family:'Fredoka One',cursive;font-size:1.8rem;
-  text-align:center;color:var(--text);outline:none;
-  caret-color:transparent;transition:border .2s;
-}
-.pdig:focus{border-color:var(--purple);background:rgba(139,92,246,.22);}
-.perr{color:#FCA5A5;font-weight:800;font-size:.85rem;min-height:18px;margin-bottom:10px;}
-.mbtn{
-  width:100%;padding:clamp(12px,2.5vw,16px);
-  border-radius:16px;border:none;
-  font-family:'Fredoka One',cursive;font-size:clamp(.95rem,2.3vw,1.2rem);
-  cursor:pointer;margin-bottom:9px;transition:transform .14s;
-}
+.ov{display:none;position:fixed;inset:0;background:rgba(10,6,26,.88);backdrop-filter:blur(8px);z-index:100;align-items:center;justify-content:center;padding:20px;}
+.ov.show{display:flex;}
+.modal{background:rgba(25,15,50,.96);border:2px solid rgba(139,92,246,.4);border-radius:28px;padding:32px 26px;max-width:400px;width:100%;text-align:center;animation:popIn .48s cubic-bezier(.34,1.56,.64,1);box-shadow:0 30px 80px rgba(0,0,0,.4);}
+.modal h2{font-family:'Fredoka One',cursive;font-size:1.9rem;color:#C4B5FD;margin-bottom:10px;}
+.modal p{color:var(--mut);font-size:.9rem;line-height:1.6;margin-bottom:16px;}
+.modal-em{font-size:3.8rem;display:block;margin-bottom:12px;}
+.modal-q{font-family:'Fredoka One',cursive;font-size:1.1rem;color:var(--ye);margin-bottom:14px;padding:10px;background:rgba(251,191,36,.1);border-radius:12px;}
+
+/* PIN */
+.pin-row{display:flex;gap:8px;justify-content:center;margin-bottom:14px;}
+.pd{width:52px;height:60px;border:2.5px solid rgba(139,92,246,.4);border-radius:14px;background:rgba(255,255,255,.05);font-family:'Fredoka One',cursive;font-size:1.9rem;text-align:center;color:var(--text);outline:none;caret-color:var(--pu);transition:border .2s;}
+.pd:focus{border-color:var(--pu);}
+.perr{color:var(--rd);font-weight:800;font-size:.85rem;margin-bottom:10px;min-height:20px;}
+
+/* MODAL BTNS */
+.mbtn{width:100%;padding:14px;border-radius:14px;border:none;font-family:'Fredoka One',cursive;font-size:1.15rem;cursor:pointer;margin-bottom:8px;transition:all .2s;}
+.mbtn-go{background:linear-gradient(135deg,var(--pu),#6D28D9);color:white;box-shadow:0 5px 20px rgba(139,92,246,.4);}
+.mbtn-rs{background:linear-gradient(135deg,var(--tl),#0891B2);color:white;box-shadow:0 5px 20px rgba(20,184,166,.4);}
 .mbtn:active{transform:scale(.97);}
-.mbtn-go{background:linear-gradient(135deg,var(--purple),#EC4899);color:white;
-  box-shadow:0 5px 20px rgba(139,92,246,.38);}
-.mbtn-re{background:linear-gradient(135deg,var(--teal),#3B82F6);color:white;
-  box-shadow:0 5px 20px rgba(20,184,166,.35);}
 
-/* ── TOAST ── */
-.toast{
-  position:fixed;top:14px;left:50%;
-  transform:translateX(-50%) translateY(-110px);
-  background:linear-gradient(135deg,var(--yellow),var(--orange));
-  color:white;padding:11px 26px;border-radius:40px;
-  font-family:'Fredoka One',cursive;font-size:1.05rem;
-  box-shadow:0 6px 28px rgba(251,191,36,.45);z-index:300;
-  transition:transform .42s cubic-bezier(.34,1.56,.64,1);white-space:nowrap;
-}
-.toast.show{transform:translateX(-50%) translateY(0);}
+/* TOAST */
+#toast{position:fixed;top:18px;left:50%;transform:translateX(-50%) translateY(-90px);background:linear-gradient(135deg,var(--ye),var(--or));color:white;padding:11px 26px;border-radius:50px;z-index:300;font-family:'Fredoka One',cursive;font-size:1.1rem;box-shadow:0 7px 28px rgba(249,115,22,.5);transition:transform .45s cubic-bezier(.34,1.56,.64,1);pointer-events:none;white-space:nowrap;}
+#toast.show{transform:translateX(-50%) translateY(0);}
 
-/* ── CONFETTI ── */
-.cf{position:fixed;z-index:400;pointer-events:none;
-  animation:cfall linear forwards;}
-@keyframes cfall{to{transform:translateY(110vh) rotate(900deg);opacity:0;}}
+/* TIMER ARC */
+.timer-arc-wrap{position:absolute;top:8px;right:10px;width:34px;height:34px;display:none;}
+.timer-arc-wrap.on{display:block;}
+.arc-bg{fill:none;stroke:rgba(255,255,255,.1);stroke-width:3;}
+.arc-fg{fill:none;stroke:var(--tl);stroke-width:3;stroke-linecap:round;transform:rotate(-90deg);transform-origin:50% 50%;transition:stroke-dashoffset .9s linear,stroke .3s;}
+.arc-txt{font-family:'Fredoka One',cursive;font-size:10px;fill:var(--tl);}
 
-/* ── TABLET ── */
-@media(min-width:600px){
-  #app{padding:16px 24px 12px;gap:10px;}
-  .ans-grid{gap:14px;}
-  .abtn{min-height:76px;}
-  .qcard{padding:20px 28px 18px;}
-}
-@media(orientation:landscape) and (max-height:480px){
-  .q-em{font-size:2rem;margin-bottom:3px;}
-  .qt{font-size:1rem;margin-bottom:6px;}
-  .tmini{display:none;}
-}
+/* CONFETTI */
+#cfbox{position:fixed;inset:0;pointer-events:none;z-index:200;overflow:hidden;}
+.cf{position:absolute;animation:cfall linear forwards;}
+@keyframes cfall{to{transform:translateY(110vh) rotate(720deg);opacity:0}}
+
+/* NEURO PULSE (spaced rep visual) */
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(20,184,166,.4)}50%{box-shadow:0 0 0 8px rgba(20,184,166,0)}}
+
+/* DIFFICULTY COLORS */
+.diff-easy{border-left:4px solid var(--gr)!important;}
+.diff-med {border-left:4px solid var(--ye)!important;}
+.diff-hard{border-left:4px solid var(--rd)!important;}
 </style>
 </head>
 <body>
 <div id="stars"></div>
+<div id="cfbox"></div>
+<div id="toast"></div>
 
-<!-- TOAST -->
-<div class="toast" id="toast">🌟 ¡Nivel nuevo! 🌟</div>
-
-<!-- CONFETTI BOX -->
-<div id="cfbox" style="position:fixed;inset:0;pointer-events:none;z-index:400;overflow:hidden;"></div>
-
-<!-- GAME OVER -->
-<div class="overlay" id="ovGO">
+<!-- ═══ GAME OVER OVERLAY ═══ -->
+<div class="ov" id="ovGO">
   <div class="modal">
-    <span class="modal-em">😢</span>
+    <span class="modal-em" id="goEm">😢</span>
     <h2>¡Se acabaron las vidas!</h2>
-    <p>¡No te rindas, eres muy inteligente! 💪<br>Para continuar, un adulto debe ingresar la clave secreta.</p>
-    <div class="pin-row">
-      <input class="pdig" type="password" inputmode="numeric" maxlength="1" id="p0">
-      <input class="pdig" type="password" inputmode="numeric" maxlength="1" id="p1">
-      <input class="pdig" type="password" inputmode="numeric" maxlength="1" id="p2">
-      <input class="pdig" type="password" inputmode="numeric" maxlength="1" id="p3">
+    <p>¡Sigue practicando, campeona!<br>Para continuar, un adulto debe responder la pregunta bíblica:</p>
+    <div class="modal-q">❓ ¿Cuántos años vivió Matusalén?</div>
+    <div class="pin-row" id="pinRow3">
+      <input class="pd" type="password" maxlength="1" inputmode="numeric" id="p0">
+      <input class="pd" type="password" maxlength="1" inputmode="numeric" id="p1">
+      <input class="pd" type="password" maxlength="1" inputmode="numeric" id="p2">
     </div>
     <div class="perr" id="perr"></div>
-    <button class="mbtn mbtn-go" onclick="checkPin()">🔓 Verificar Clave</button>
-    <button class="mbtn mbtn-re" onclick="restart()">🔄 Empezar de Nuevo</button>
+    <button class="mbtn mbtn-go" onclick="checkPin()">🔓 Verificar Respuesta</button>
+    <button class="mbtn mbtn-rs" onclick="restart()">🔄 Empezar de Cero</button>
   </div>
 </div>
 
-<!-- WIN -->
-<div class="overlay" id="ovWin">
+<!-- ═══ WIN OVERLAY ═══ -->
+<div class="ov" id="ovWin">
   <div class="modal">
     <span class="modal-em">🏆</span>
     <h2>¡Eres una campeona!</h2>
-    <p>Completaste la ronda con<br><strong id="fscore" style="color:var(--yellow);font-size:1.4em;"></strong> puntos<br>¡Dios te hizo muy, muy inteligente! 🙏✨</p>
+    <p>Completaste todas las preguntas con <strong id="finScore" style="color:var(--ye)"></strong> puntos.<br>¡Dios te hizo brillante! 🙏✨</p>
     <button class="mbtn mbtn-go" onclick="restart()">🎉 ¡Jugar Otra Vez!</button>
   </div>
 </div>
 
-<!-- APP -->
+<!-- ═══ MAIN APP ═══ -->
 <div id="app">
+
+  <!-- Header -->
   <div class="hdr">
     <div class="logo">🌟 Aprende con Sofía</div>
-    <div class="mix-badge">🎲 Todo mezclado</div>
+    <div class="lvl-badge" id="lvlBadge">Nivel 1 · Inicio</div>
   </div>
 
+  <!-- HUD -->
   <div class="hud">
     <div class="hbox">
       <div class="hlbl">Vidas</div>
@@ -352,257 +220,360 @@ body{
     </div>
     <div class="hbox">
       <div class="hlbl">Puntos</div>
-      <div class="hval" style="color:var(--yellow)" id="scoreV">0</div>
+      <div class="hval" id="scoreV">0</div>
     </div>
     <div class="hbox">
-      <div class="hlbl">Racha <span class="fire-icon">🔥</span></div>
-      <div class="hval" style="color:var(--orange)" id="streakV">0</div>
+      <div class="hlbl">🔥 Racha</div>
+      <div class="hval" id="streakV">0</div>
     </div>
-    <div class="hbox">
-      <div class="hlbl">Nivel</div>
-      <div class="hval" style="color:var(--teal)" id="levelV">1</div>
+    <div class="hbox" style="flex:1.4">
+      <div class="hlbl">⚡ Modo</div>
+      <div class="hval" id="modeV" style="font-size:.75rem">Tablas</div>
     </div>
   </div>
 
+  <!-- Neuro Toolbar -->
+  <div class="neuro-bar">
+    <span class="nbadge nb-space on" id="nb-space" onclick="toggleNeuro('space')" title="Repetición espaciada">🧠 Rep. Espaciada</span>
+    <span class="nbadge nb-hint on" id="nb-hint" onclick="toggleNeuro('hint')" title="Pistas mnemónicas">💡 Pistas</span>
+    <span class="nbadge nb-timer on" id="nb-timer" onclick="toggleNeuro('timer')" title="Temporizador (presión saludable)">⏱ Temporizador</span>
+    <span class="nbadge nb-voice on" id="nb-voice" onclick="toggleNeuro('voice')" title="Lectura en voz alta">🔊 Voz</span>
+  </div>
+
+  <!-- Progress -->
   <div class="prog">
-    <div class="prog-row"><span id="progTxt">Pregunta 1</span><span id="progPct">0%</span></div>
+    <div class="prog-row">
+      <span id="progTxt">Pregunta 1</span>
+      <span id="progPct">0%</span>
+    </div>
     <div class="prog-track"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
   </div>
 
-  <div class="subj-pill cat-times" id="subjPill">🔢 Tablas de Multiplicar</div>
-
+  <!-- Question Card -->
   <div class="qcard" id="qcard">
-    <!-- times mini -->
+    <!-- Difficulty + timer arc -->
+    <div class="diff-chip">
+      <span class="chip" id="diffChip">Nivel 1</span>
+      <span class="timer-ring" id="timerRing"></span>
+    </div>
+
+    <!-- Timer arc SVG -->
+    <svg class="timer-arc-wrap" id="arcWrap" viewBox="0 0 34 34">
+      <circle class="arc-bg" cx="17" cy="17" r="14"/>
+      <circle class="arc-fg" id="arcFg" cx="17" cy="17" r="14"/>
+      <text class="arc-txt" x="17" y="21" text-anchor="middle" id="arcTxt">0</text>
+    </svg>
+
+    <!-- Spaced repetition notice -->
+    <div class="sr-panel" id="srPanel">📚 ¡Esta pregunta vuelve porque la erraste antes! Con repetición espaciada se aprende mejor.</div>
+
+    <!-- Times table mini (adaptive: hidden at level 3) -->
     <div class="tmini" id="tmini" style="display:none">
-      <div class="tmini-t" id="tminiT">Tabla del 3</div>
+      <div class="tmini-t" id="tminiT">Tabla del 2</div>
       <div class="tmini-g" id="tminiG"></div>
     </div>
 
-    <span class="q-em" id="qem">🎲</span>
+    <!-- Memory palace hint (level 1-2 only) -->
+    <div class="mem-palace" id="memPalace" style="display:none"></div>
+
+    <span class="q-em" id="qem">🌟</span>
     <div class="qt" id="qtxt">Cargando...</div>
     <div class="qhint" id="qhint" style="display:none"></div>
 
     <div class="ans-grid" id="ansGrid"></div>
     <div class="fback" id="fback"></div>
-    <button class="nbtn" id="nbtn" onclick="nextQ()">Siguiente ➡️</button>
+    <button class="nxt" id="nbtn" onclick="nextQ()">Siguiente ➡️</button>
   </div>
-</div>
+
+</div><!-- /app -->
 
 <script>
-'use strict';
-
-// ═══════════════════════════════════
-//  QUESTION DATA
-// ═══════════════════════════════════
-
-function makeTimes(){
-  const q=[];
-  for(let t=1;t<=10;t++){
-    for(let i=1;i<=10;i++){
-      const a=t*i;
-      const ws=new Set();
-      while(ws.size<3){
-        const w=a+(Math.floor(Math.random()*5)+1)*(Math.random()<.5?1:-1);
-        if(w>0&&w!==a) ws.add(w);
-      }
-      q.push({cat:'times',emoji:'✖️',table:t,factor:i,
-        q:`${t} × ${i} = ?`,a,choices:shu([a,...ws])});
-    }
-  }
-  return q;
+// ═══════════════════════════════════════════════════════════
+//  NEUROSCIENCE FEATURES FLAGS
+// ═══════════════════════════════════════════════════════════
+const N = { space:true, hint:true, timer:true, voice:true };
+function toggleNeuro(k){
+  N[k]=!N[k];
+  document.getElementById('nb-'+k).classList.toggle('on',N[k]);
 }
 
-const MATH=[
-  {emoji:'🍎',q:'Sofía tiene 8 manzanas\ny le dan 7 más.\n¿Cuántas tiene?',a:15,choices:[13,14,15,16]},
-  {emoji:'🚌',q:'24 niños en el bus,\nbajan 9.\n¿Cuántos quedan?',a:15,choices:[13,14,15,17]},
-  {emoji:'🍕',q:'Una pizza tiene 8 porciones.\n¿Cuántas en 3 pizzas?',a:24,choices:[20,22,24,26]},
-  {emoji:'💰',q:'Tienes 50 monedas\ny gastas 23.\n¿Cuántas quedan?',a:27,choices:[25,26,27,29]},
-  {emoji:'🌸',q:'6 floreros con 5 flores\ncada uno.\n¿Cuántas flores?',a:30,choices:[28,30,32,35]},
-  {emoji:'📚',q:'4 estantes,\n9 libros cada uno.\n¿Cuántos libros?',a:36,choices:[32,34,36,38]},
-  {emoji:'🐥',q:'Una gallina pone 7 huevos\npor semana.\n¿Cuántos en 3 semanas?',a:21,choices:[18,20,21,24]},
-  {emoji:'🍬',q:'Ana tiene 45 dulces\ny regala 18.\n¿Cuántos le quedan?',a:27,choices:[25,27,29,31]},
-  {emoji:'⭐',q:'¿Cuánto es 63 ÷ 7?',a:9,choices:[7,8,9,10]},
-  {emoji:'🚗',q:'6 km por vuelta.\n¿Cuántos km en 8 vueltas?',a:48,choices:[42,45,48,54]},
-  {emoji:'🎯',q:'¿Cuánto es 72 ÷ 8?',a:9,choices:[7,8,9,10]},
-  {emoji:'🌈',q:'56 crayones en 7 cajas.\n¿Cuántos en cada caja?',a:8,choices:[6,7,8,9]},
-  {emoji:'🧁',q:'4 bandejas de 6 muffins.\n¿Cuántos muffins?',a:24,choices:[20,22,24,26]},
-  {emoji:'🐠',q:'3 peceras, 9 peces cada una.\n¿Cuántos peces?',a:27,choices:[24,25,27,30]},
-  {emoji:'🎀',q:'¿Cuánto es 100 − 37?',a:63,choices:[53,63,73,83]},
-  {emoji:'🦋',q:'¿Cuánto es 9 × 9?',a:81,choices:[72,81,90,99]},
-  {emoji:'⚽',q:'5 equipos, 7 jugadores cada uno.\n¿Cuántos jugadores?',a:35,choices:[30,33,35,40]},
-  {emoji:'🎂',q:'2 pasteles, 4 porciones cada uno.\n¿Cuántas porciones?',a:8,choices:[6,7,8,9]},
-  {emoji:'🏃',q:'5 vueltas por día.\n¿Cuántas en 9 días?',a:45,choices:[40,42,45,50]},
-  {emoji:'🌟',q:'¿Cuánto es 6 × 7?',a:42,choices:[36,40,42,48]},
-  {emoji:'🍦',q:'¿Cuánto es 81 ÷ 9?',a:9,choices:[7,8,9,10]},
-  {emoji:'🎵',q:'¿Cuánto es 48 ÷ 6?',a:8,choices:[6,7,8,9]},
-  {emoji:'🦊',q:'¿Cuánto es 7 × 8?',a:56,choices:[48,54,56,63]},
-  {emoji:'🌺',q:'¿Cuánto es 4 × 9?',a:36,choices:[27,32,36,40]},
-  {emoji:'🐇',q:'¿Cuánto es 3 × 8?',a:24,choices:[21,24,27,30]},
-].map(q=>({...q,cat:'math'}));
-
-const ENGLISH=[
-  {emoji:'🍎',q:'¿Cómo se dice\n"MANZANA" en inglés?',a:'Apple',choices:['Orange','Apple','Grape','Banana'],hint:'Comienza con "A"'},
-  {emoji:'🐶',q:'¿Cómo se dice\n"PERRO" en inglés?',a:'Dog',choices:['Cat','Dog','Bird','Fish'],hint:'D-O-G'},
-  {emoji:'🏠',q:'¿Cómo se dice\n"CASA" en inglés?',a:'House',choices:['School','House','Car','Tree'],hint:'Comienza con "H"'},
-  {emoji:'🐱',q:'¿Cómo se dice\n"GATO" en inglés?',a:'Cat',choices:['Cat','Cow','Hen','Pig'],hint:'C-A-T'},
-  {emoji:'📚',q:'¿Cómo se dice\n"LIBRO" en inglés?',a:'Book',choices:['Bag','Pen','Book','Desk'],hint:'Comienza con "B"'},
-  {emoji:'💧',q:'¿Cómo se dice\n"AGUA" en inglés?',a:'Water',choices:['Juice','Milk','Water','Soda'],hint:'Comienza con "W"'},
-  {emoji:'☀️',q:'¿Cómo se dice\n"SOL" en inglés?',a:'Sun',choices:['Moon','Star','Sun','Sky'],hint:'S-U-N'},
-  {emoji:'🔴',q:'¿Cómo se dice\n"ROJO" en inglés?',a:'Red',choices:['Blue','Red','Green','Pink'],hint:'R-E-D'},
-  {emoji:'🌸',q:'¿Cómo se dice\n"FLOR" en inglés?',a:'Flower',choices:['Tree','Leaf','Flower','Grass'],hint:'Comienza con "F"'},
-  {emoji:'🌙',q:'¿Cómo se dice\n"LUNA" en inglés?',a:'Moon',choices:['Star','Moon','Sky','Cloud'],hint:'M-O-O-N'},
-  {emoji:'7️⃣',q:'¿Cómo se escribe\nel número 7 en inglés?',a:'Seven',choices:['Five','Six','Seven','Eight'],hint:'Se-ven'},
-  {emoji:'🔢',q:'¿Cómo se escribe\nel número 12 en inglés?',a:'Twelve',choices:['Ten','Eleven','Twelve','Thirteen'],hint:'Twel-ve'},
-  {emoji:'2️⃣0️⃣',q:'¿Cómo se escribe\nel número 20 en inglés?',a:'Twenty',choices:['Twelve','Twenty','Thirty','Forty'],hint:'Twen-ty'},
-  {emoji:'💙',q:'¿Qué color es\n"BLUE" en español?',a:'Azul',choices:['Verde','Azul','Rojo','Amarillo'],hint:'Color del cielo'},
-  {emoji:'💚',q:'¿Qué color es\n"GREEN" en español?',a:'Verde',choices:['Verde','Azul','Rosa','Morado'],hint:'Color del pasto'},
-  {emoji:'❤️',q:'¿Qué significa\n"I love God"?',a:'Yo amo a Dios',choices:['Yo temo a Dios','Yo amo a Dios','Dios me ama','Yo creo en Dios'],hint:'I=Yo, love=amar'},
-  {emoji:'🌞',q:'¿Qué significa\n"Good morning"?',a:'Buenos días',choices:['Buenas noches','Buenas tardes','Buenos días','Hola'],hint:'Morning = mañana'},
-  {emoji:'🙏',q:'¿Qué significa\n"Thank you"?',a:'Gracias',choices:['Por favor','De nada','Gracias','Perdón'],hint:'Gratitud'},
-  {emoji:'🦋',q:'¿Cómo se dice\n"MARIPOSA" en inglés?',a:'Butterfly',choices:['Dragonfly','Firefly','Butterfly','Hummingbird'],hint:'Butter-fly'},
-  {emoji:'⭐',q:'¿Cómo se dice\n"ESTRELLA" en inglés?',a:'Star',choices:['Star','Moon','Sun','Sky'],hint:'S-T-A-R'},
-  {emoji:'🍞',q:'¿Cómo se dice\n"PAN" en inglés?',a:'Bread',choices:['Bread','Rice','Cake','Soup'],hint:'B-R-E-A-D'},
-  {emoji:'🐘',q:'¿Cómo se dice\n"ELEFANTE" en inglés?',a:'Elephant',choices:['Elephant','Giraffe','Tiger','Lion'],hint:'E-le-phant'},
-  {emoji:'👨‍👩‍👧',q:'¿Cómo se dice\n"FAMILIA" en inglés?',a:'Family',choices:['Friend','Family','People','Group'],hint:'Fami-ly'},
-  {emoji:'🎨',q:'¿Cómo se dice\n"AMARILLO" en inglés?',a:'Yellow',choices:['Yellow','Orange','Purple','Brown'],hint:'Y-E-L-L-O-W'},
-  {emoji:'🐦',q:'¿Cómo se dice\n"PÁJARO" en inglés?',a:'Bird',choices:['Fish','Bird','Frog','Bee'],hint:'B-I-R-D'},
-].map(q=>({...q,cat:'en'}));
-
-const BIBLE=[
-  {emoji:'📖',q:'¿Cuál es el libro sagrado\nde los cristianos?',a:'La Biblia',choices:['El Corán','La Biblia','La Torá','El Talmud']},
-  {emoji:'🌊',q:'¿Quién separó el Mar Rojo\npara que Israel cruzara?',a:'Moisés',choices:['Abraham','David','Moisés','Pablo']},
-  {emoji:'🐑',q:'¿Quién mató al gigante\nGoliat con una honda?',a:'David',choices:['Saúl','Sansón','David','Josué']},
-  {emoji:'⭐',q:'¿En qué ciudad\nnació Jesús?',a:'Belén',choices:['Nazaret','Jerusalén','Belén','Jericó']},
-  {emoji:'🌈',q:'¿Qué prometió Dios\ncon el arcoíris?',a:'No destruir la tierra con agua',choices:['Dar lluvia siempre','Crear colores','No destruir la tierra con agua','Paz entre animales']},
-  {emoji:'🦁',q:'¿Quién fue metido\nen el foso de los leones?',a:'Daniel',choices:['Elías','Daniel','Jonás','Pedro']},
-  {emoji:'🐳',q:'¿A qué profeta\nse tragó un gran pez?',a:'Jonás',choices:['Moisés','Elías','Jonás','Isaías']},
-  {emoji:'❤️',q:'¿Cuál es el mandamiento\nmás importante, según Jesús?',a:'Amar a Dios con todo tu corazón',choices:['No mentir','No robar','Amar a Dios con todo tu corazón','Ir a la iglesia']},
-  {emoji:'🌟',q:'¿Cómo se llaman los\n12 seguidores más cercanos de Jesús?',a:'Los 12 Apóstoles',choices:['Los 12 Profetas','Los 12 Apóstoles','Los 12 Sacerdotes','Los 12 Ángeles']},
-  {emoji:'🍃',q:'¿En qué jardín\nvivían Adán y Eva?',a:'El Jardín del Edén',choices:['El Jardín de Getsemaní','El Monte Sinaí','El Jardín del Edén','El Valle de Josafat']},
-  {emoji:'🕊️',q:'¿Qué animal representa\nla paz en la Biblia?',a:'La paloma',choices:['El águila','El cordero','La paloma','El pez']},
-  {emoji:'📜',q:'¿Cuántos libros tiene\nla Biblia protestante?',a:'66',choices:['39','73','66','27']},
-  {emoji:'🎵',q:'¿Quién escribió\nla mayoría de los Salmos?',a:'David',choices:['Salomón','David','Moisés','Pablo']},
-  {emoji:'🙏',q:'¿Cómo se llama la oración\nque Jesús nos enseñó?',a:'El Padrenuestro',choices:['El Ave María','El Padrenuestro','Los Salmos','El Credo']},
-  {emoji:'🍞',q:'¿Cuántos panes usó Jesús\npara alimentar a la multitud?',a:'5 panes y 2 peces',choices:['10 panes y 5 peces','3 panes y 3 peces','5 panes y 2 peces','7 panes y 4 peces']},
-  {emoji:'🏔️',q:'¿En qué monte Dios le dio\nlos 10 Mandamientos a Moisés?',a:'Monte Sinaí',choices:['Monte Horeb','Monte Sión','Monte Sinaí','Monte Tabor']},
-  {emoji:'👑',q:'¿Quién fue el\nprimer rey de Israel?',a:'Saúl',choices:['David','Saúl','Salomón','Josué']},
-  {emoji:'📖',q:'¿Cuál es el\nprimer libro de la Biblia?',a:'Génesis',choices:['Éxodo','Génesis','Levítico','Salmos']},
-  {emoji:'🌍',q:'¿Cuántos días tardó\nDios en crear el mundo?',a:'6 días',choices:['3 días','5 días','6 días','7 días']},
-  {emoji:'🚢',q:'¿Quién construyó el arca\npara salvarse del diluvio?',a:'Noé',choices:['Abraham','Noé','Moisés','Josué']},
-  {emoji:'🔑',q:'Jesús dijo: "Yo soy\nel camino, la verdad y la ___"',a:'Vida',choices:['Luz','Verdad','Vida','Paz']},
-  {emoji:'✨',q:'¿Qué hicieron los Reyes Magos\ncuando encontraron a Jesús?',a:'Lo adoraron y dieron regalos',choices:['Solo lo miraron','Huyeron','Lo adoraron y dieron regalos','Fueron a contarle a Herodes']},
-  {emoji:'🌟',q:'Juan 3:16 dice que Dios amó\ntan to al mundo que dio a su Hijo.\n¿Quién es ese Hijo?',a:'Jesús',choices:['Moisés','Juan','Jesús','Pablo']},
-].map(q=>({...q,cat:'bible'}));
-
-// ═══════════════════════════════════
+// ═══════════════════════════════════════════════════════════
 //  UTILS
-// ═══════════════════════════════════
-function shu(a){return[...a].sort(()=>Math.random()-.5);}
-function rnd(a,b){return Math.floor(Math.random()*(b-a+1))+a;}
-function pick(a){return a[rnd(0,a.length-1)];}
+// ═══════════════════════════════════════════════════════════
+const rnd=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
+const shu=a=>[...a].sort(()=>Math.random()-.5);
+const pick=a=>a[rnd(0,a.length-1)];
 
-const META={
-  times:{lbl:'🔢 Tablas de Multiplicar',cls:'cat-times'},
-  math: {lbl:'➕ Matemáticas',           cls:'cat-math'},
-  en:   {lbl:'🇺🇸 Inglés',              cls:'cat-en'},
-  bible:{lbl:'✝️ Biblia',               cls:'cat-bible'},
+// ═══════════════════════════════════════════════════════════
+//  DIFFICULTY SYSTEM
+//  Level 1 (score 0-49):   tabla completa + pistas
+//  Level 2 (score 50-119): tabla parcial (solo fila actual) + pistas opcionales
+//  Level 3 (score 120+):   SIN tabla, SIN pistas (memorización pura)
+// ═══════════════════════════════════════════════════════════
+function getDiffLevel(){
+  if(G.score>=120) return 3;
+  if(G.score>=50)  return 2;
+  return 1;
+}
+function getDiffLabel(){ return ['','🌱 Aprendiendo','🌿 Creciendo','🔥 Memoriza ya!'][getDiffLevel()]; }
+function getDiffClass(){ return ['','chip-lv1','chip-lv2','chip-lv3'][getDiffLevel()]; }
+
+// ═══════════════════════════════════════════════════════════
+//  DATA BANKS
+// ═══════════════════════════════════════════════════════════
+
+// Memory palace phrases: pattern → memorable image
+const MEM_PALACE = {
+  '2':  '🦆 Dos patitos nadan juntos — 2×2=4 (cuatro patas)',
+  '3':  '🌟 El triángulo tiene 3 lados — visualiza 3 estrellas',
+  '4':  '🐄 4 patas de vaca × cualquier número',
+  '5':  '🖐 Cuenta con los dedos de 5 en 5',
+  '6':  '🎲 El dado de 6 — seis × seis = 36 (tres seis)',
+  '7':  '🌈 7 colores del arcoíris × 7 = 49 (cuatro nueves)',
+  '8':  '🎱 El 8 es un infinito parado × 8 = 64 (seis-cuatro)',
+  '9':  '🙌 9×9=81: suma los dígitos de cada resultado → siempre 9',
+  '10': '🤲 ¡Fácil! Solo agrega un 0 al número',
 };
 
-// Build big mixed pool
-function buildPool(){
-  const timePart = shu(makeTimes()).slice(0,45);
-  const mathPart = shu([...MATH]).slice(0,22);
-  const enPart   = shu([...ENGLISH]).slice(0,22);
-  const bibPart  = shu([...BIBLE]).slice(0,21);
-  return shu([...timePart,...mathPart,...enPart,...bibPart]);
+// Spaced repetition queue
+const SR_WRONG = [];
+let srMode = false;
+
+// ── MULTIPLICATION ──
+function makeTimesQ(table){
+  const qs=[];
+  for(let i=1;i<=10;i++){
+    const ans=table*i;
+    const ws=new Set();
+    while(ws.size<3){
+      const d=rnd(1,3)*(Math.random()<.5?1:-1);
+      const w=ans+d;
+      if(w>0&&w!==ans) ws.add(w);
+    }
+    qs.push({
+      cat:'times', table, factor:i,
+      q:`${table} × ${i} = ?`,
+      a:ans, choices:shu([ans,...ws]),
+      emoji:'🔢',
+      hint:`Piensa: ${table} grupos de ${i}`,
+      mem: MEM_PALACE[String(table)]
+    });
+  }
+  return qs;
 }
 
-// ═══════════════════════════════════
-//  STATE
-// ═══════════════════════════════════
+// ── MATH WORD PROBLEMS ──
+const MATH=[
+  {q:"🍎 Sofía tiene 8 manzanas y le dan 7 más.\n¿Cuántas tiene en total?",a:15,choices:[13,14,15,16],emoji:"🍎"},
+  {q:"🚌 Hay 24 niños en el bus. Bajan 9.\n¿Cuántos quedan?",a:15,choices:[13,14,15,16],emoji:"🚌"},
+  {q:"🍕 Una pizza tiene 8 porciones.\n¿Cuántas porciones hay en 3 pizzas?",a:24,choices:[20,22,24,26],emoji:"🍕"},
+  {q:"💰 Tienes 50 monedas y gastas 23.\n¿Cuántas te quedan?",a:27,choices:[25,26,27,28],emoji:"💰"},
+  {q:"🌸 6 floreros con 5 flores cada uno.\n¿Cuántas flores hay?",a:30,choices:[28,30,32,35],emoji:"🌸"},
+  {q:"📚 4 estantes con 9 libros cada uno.\n¿Cuántos libros?",a:36,choices:[32,34,36,38],emoji:"📚"},
+  {q:"🐥 Una gallina pone 7 huevos por semana.\n¿Cuántos pone en 3 semanas?",a:21,choices:[18,20,21,24],emoji:"🐥"},
+  {q:"⭐ ¿Cuánto es 63 ÷ 7?",a:9,choices:[7,8,9,10],emoji:"⭐"},
+  {q:"🎯 ¿Cuánto es 72 ÷ 8?",a:9,choices:[7,8,9,10],emoji:"🎯"},
+  {q:"🌈 56 crayones en 7 cajas iguales.\n¿Cuántos hay en cada caja?",a:8,choices:[6,7,8,9],emoji:"🌈"},
+  {q:"🦋 ¿Cuánto es 9 × 9?",a:81,choices:[72,81,90,99],emoji:"🦋"},
+  {q:"⚽ 5 equipos con 7 jugadores.\n¿Cuántos jugadores en total?",a:35,choices:[30,33,35,40],emoji:"⚽"},
+  {q:"🎂 ¿Cuánto es 100 − 37?",a:63,choices:[53,63,73,83],emoji:"🎂"},
+  {q:"🚗 6 km por vuelta × 8 vueltas = ?",a:48,choices:[42,45,48,54],emoji:"🚗"},
+  {q:"🐠 3 peceras con 9 peces cada una.\n¿Cuántos peces?",a:27,choices:[24,25,27,30],emoji:"🐠"},
+  {q:"🧁 4 bandejas de 6 muffins.\n¿Cuántos muffins?",a:24,choices:[20,22,24,26],emoji:"🧁"},
+  {q:"🍬 Ana tiene 45 dulces y regala 18.\n¿Cuántos le quedan?",a:27,choices:[25,27,29,31],emoji:"🍬"},
+  {q:"🎀 ¿Cuánto es 8 × 7?",a:56,choices:[48,54,56,63],emoji:"🎀"},
+  {q:"🏃 5 vueltas por día × 9 días = ?",a:45,choices:[40,42,45,50],emoji:"🏃"},
+  {q:"💎 ¿Cuánto es 6 × 6?",a:36,choices:[30,33,36,42],emoji:"💎"},
+];
+
+// ── ENGLISH ──
+const ENGLISH=[
+  {q:"¿Cómo se dice 'MANZANA' en inglés?",a:"Apple",choices:["Orange","Apple","Grape","Banana"],emoji:"🍎",hint:"Empieza con A..."},
+  {q:"¿Cómo se dice 'PERRO' en inglés?",a:"Dog",choices:["Cat","Dog","Bird","Fish"],emoji:"🐶",hint:"Empieza con D..."},
+  {q:"¿Cómo se dice 'CASA' en inglés?",a:"House",choices:["School","House","Car","Tree"],emoji:"🏠",hint:"Empieza con H..."},
+  {q:"¿Cómo se dice 'LIBRO' en inglés?",a:"Book",choices:["Bag","Pen","Book","Desk"],emoji:"📚",hint:"Empieza con B..."},
+  {q:"¿Cómo se dice 'AGUA' en inglés?",a:"Water",choices:["Juice","Milk","Water","Soda"],emoji:"💧",hint:"Empieza con W..."},
+  {q:"¿Cómo se dice 'SOL' en inglés?",a:"Sun",choices:["Moon","Star","Sun","Sky"],emoji:"☀️",hint:"Empieza con S..."},
+  {q:"¿Cómo se dice 'ROJO' en inglés?",a:"Red",choices:["Blue","Red","Green","Pink"],emoji:"🔴",hint:"Empieza con R..."},
+  {q:"¿Cómo se dice 'FLOR' en inglés?",a:"Flower",choices:["Tree","Leaf","Flower","Grass"],emoji:"🌸",hint:"Empieza con F..."},
+  {q:"¿Cómo se dice 'MARIPOSA' en inglés?",a:"Butterfly",choices:["Dragonfly","Firefly","Butterfly","Hummingbird"],emoji:"🦋",hint:"Butter-fly..."},
+  {q:"¿Cómo se dice 'ESTRELLA' en inglés?",a:"Star",choices:["Star","Moon","Sun","Cloud"],emoji:"⭐",hint:"Empieza con St..."},
+  {q:"¿Cómo se escribe el número 7 en inglés?",a:"Seven",choices:["Five","Six","Seven","Eight"],emoji:"7️⃣",hint:"Se-ven..."},
+  {q:"¿Cómo se escribe el número 12 en inglés?",a:"Twelve",choices:["Ten","Eleven","Twelve","Thirteen"],emoji:"🔢",hint:"Twel-ve..."},
+  {q:"¿Cómo se escribe el número 20 en inglés?",a:"Twenty",choices:["Twelve","Twenty","Thirty","Forty"],emoji:"2️⃣0️⃣",hint:"Twen-ty..."},
+  {q:"¿Qué color es 'BLUE' en español?",a:"Azul",choices:["Verde","Azul","Rojo","Amarillo"],emoji:"💙",hint:"Color del cielo..."},
+  {q:"¿Qué color es 'GREEN'?",a:"Verde",choices:["Verde","Azul","Rosa","Morado"],emoji:"💚",hint:"Color del pasto..."},
+  {q:"¿Qué significa 'I love God'?",a:"Yo amo a Dios",choices:["Yo temo a Dios","Yo amo a Dios","Dios me ama","Yo creo en Dios"],emoji:"❤️",hint:"I=Yo, love=amar..."},
+  {q:"¿Qué significa 'Good morning'?",a:"Buenos días",choices:["Buenas noches","Buenas tardes","Buenos días","Hola"],emoji:"🌞",hint:"Good=Bueno, morning=mañana"},
+  {q:"¿Qué significa 'Thank you'?",a:"Gracias",choices:["Por favor","De nada","Gracias","Perdón"],emoji:"🙏",hint:"Es gratitud..."},
+  {q:"¿Cómo se dice 'LUNA' en inglés?",a:"Moon",choices:["Star","Moon","Sky","Cloud"],emoji:"🌙",hint:"Empieza con M..."},
+  {q:"¿Cómo se dice 'GATO' en inglés?",a:"Cat",choices:["Cat","Cow","Hen","Pig"],emoji:"🐱",hint:"Empieza con C..."},
+];
+
+// ── BIBLE ──
+const BIBLE=[
+  {q:"¿Cómo se llama el libro más importante para los cristianos?",a:"La Biblia",choices:["El Corán","La Biblia","La Torá","El Talmud"],emoji:"📖"},
+  {q:"¿Quién separó el Mar Rojo para que Israel cruzara?",a:"Moisés",choices:["Abraham","David","Moisés","Pablo"],emoji:"🌊"},
+  {q:"¿Quién era el pastor que mató al gigante Goliat?",a:"David",choices:["Saúl","Sansón","David","Josué"],emoji:"🐑"},
+  {q:"¿En qué ciudad nació Jesús?",a:"Belén",choices:["Nazaret","Jerusalén","Belén","Jericó"],emoji:"⭐"},
+  {q:"¿Quién fue metido en el foso de los leones y Dios lo protegió?",a:"Daniel",choices:["Elías","Daniel","Jonás","Pedro"],emoji:"🦁"},
+  {q:"¿A qué profeta se tragó un gran pez?",a:"Jonás",choices:["Moisés","Elías","Jonás","Isaías"],emoji:"🐳"},
+  {q:"¿Cuál es el mandamiento más importante según Jesús?",a:"Amar a Dios con todo el corazón",choices:["No mentir","No robar","Amar a Dios con todo el corazón","Ir a la iglesia"],emoji:"❤️"},
+  {q:"¿Cómo se llaman los 12 seguidores más cercanos de Jesús?",a:"Los 12 Apóstoles",choices:["Los 12 Profetas","Los 12 Apóstoles","Los 12 Sacerdotes","Los 12 Ángeles"],emoji:"🌟"},
+  {q:"¿En qué jardín vivían Adán y Eva?",a:"El Jardín del Edén",choices:["Getsemaní","El Monte Sinaí","El Jardín del Edén","Valle de Josafat"],emoji:"🍃"},
+  {q:"¿Qué animal representa la paz en la Biblia?",a:"La paloma",choices:["El águila","El cordero","La paloma","El pez"],emoji:"🕊️"},
+  {q:"¿Cuántos libros tiene la Biblia (versión protestante)?",a:"66",choices:["39","73","66","27"],emoji:"📜"},
+  {q:"¿Quién escribió la mayoría de los Salmos?",a:"David",choices:["Salomón","David","Moisés","Pablo"],emoji:"🎵"},
+  {q:"¿Cuál es el versículo más famoso? (Juan 3:...)",a:"16",choices:["14","15","16","17"],emoji:"⭐"},
+  {q:"¿Cómo se llama la oración que Jesús enseñó a sus discípulos?",a:"El Padrenuestro",choices:["El Ave María","El Padrenuestro","Los Salmos","El Credo"],emoji:"🙏"},
+  {q:"Jesús multiplicó panes y peces para la multitud.\n¿Cuántos panes y peces había?",a:"5 panes y 2 peces",choices:["10 panes y 5","3 panes y 3","5 panes y 2 peces","7 panes y 4"],emoji:"🍞"},
+  {q:"¿En qué monte Dios dio los 10 Mandamientos a Moisés?",a:"Monte Sinaí",choices:["Monte Horeb","Monte Sión","Monte Sinaí","Monte Tabor"],emoji:"🏔️"},
+  {q:"¿Cuál es el primer rey de Israel?",a:"Saúl",choices:["David","Saúl","Salomón","Josué"],emoji:"👑"},
+  {q:"¿Cuál es el primer libro de la Biblia?",a:"Génesis",choices:["Éxodo","Génesis","Levítico","Salmos"],emoji:"📖"},
+  {q:"¿Cuántos días tardó Dios en crear el mundo?",a:"6 días",choices:["3 días","5 días","6 días","7 días"],emoji:"🌍"},
+  // Matusalén hint question
+  {q:"¿Cuántos años vivió Matusalén?\n(el hombre que más vivió en la Biblia)",a:"969",choices:["777","900","969","999"],emoji:"👴",hint:"Génesis 5:27 — el número más famoso de longevidad"},
+];
+
+const CMSG=["🎉 ¡Excelente!","⭐ ¡Muy bien!","🌟 ¡Perfecto!","🏆 ¡Eres una campeona!","🦋 ¡Increíble!","🎊 ¡Genial!","💖 ¡Dios te hizo muy inteligente!","🌈 ¡Así se hace!","✨ ¡Brillante!","🚀 ¡Wow, imparable!"];
+const WMSG=["💪 ¡Casi! La próxima.","😊 No te rindas, ¡tú puedes!","🙏 ¡Sigue practicando!","💡 ¡Ya casi lo tienes!","❤️ ¡Dios te da fuerzas!"];
+
+// ═══════════════════════════════════════════════════════════
+//  GAME STATE
+// ═══════════════════════════════════════════════════════════
 const G={
-  lives:5,max:5,score:0,streak:0,level:1,
-  corr:0,total:0,
-  pool:[],idx:0,cur:null,done:false,
+  lives:5, max:5, score:0, streak:0, level:1, corr:0, total:0,
+  pool:[], idx:0, cur:null, done:false,
+  currentTable:2,
+  timerVal:0, timerInterval:null,
+  wrongIds:new Set(), // for spaced repetition
 };
 
-const CMSG=['🎉 ¡Excelente!','⭐ ¡Muy bien!','🌟 ¡Perfecto!','🏆 ¡Eres brillante!',
-  '🦋 ¡Increíble!','🎊 ¡Genial!','💖 ¡Dios te hizo inteligente!','🌈 ¡Así se hace!',
-  '✨ ¡Brillante!','🚀 ¡Wow!','🙌 ¡Lo lograste!','🌺 ¡Maravilloso!'];
-const WMSG=['💪 ¡Casi! No te rindas.','😊 ¡La próxima lo logras!',
-  '🙏 ¡Sigue practicando!','❤️ ¡Dios te da fuerzas!','🌟 ¡Tú puedes!'];
+// ═══════════════════════════════════════════════════════════
+//  POOL BUILDER (mixed, with spaced rep injection)
+// ═══════════════════════════════════════════════════════════
+function buildPool(){
+  const timesQs = [];
+  for(let t=1;t<=10;t++) timesQs.push(...makeTimesQ(t));
+  const all=[
+    ...shu(timesQs).slice(0,20),
+    ...shu([...MATH]).slice(0,10),
+    ...shu([...ENGLISH]).slice(0,10),
+    ...shu([...BIBLE]).slice(0,10),
+  ];
+  return shu(all);
+}
 
-// ═══════════════════════════════════
-//  STAR FIELD
-// ═══════════════════════════════════
-(function(){
-  const c=document.getElementById('stars');
-  for(let i=0;i<70;i++){
-    const s=document.createElement('div');
-    s.className='star';
-    const z=rnd(1,4);
-    s.style.cssText=`width:${z}px;height:${z}px;top:${rnd(0,100)}%;left:${rnd(0,100)}%;animation-duration:${rnd(2,5)}s;animation-delay:${rnd(0,4000)/1000}s;`;
-    c.appendChild(s);
-  }
-})();
-
-// ═══════════════════════════════════
+// ═══════════════════════════════════════════════════════════
 //  INIT
-// ═══════════════════════════════════
+// ═══════════════════════════════════════════════════════════
 function init(){
+  makeStars();
+  setupPin();
   G.pool=buildPool();
   G.idx=0;
-  setupPin();
   updateHUD();
   renderQ();
 }
 
-// ═══════════════════════════════════
-//  RENDER
-// ═══════════════════════════════════
+function makeStars(){
+  const c=document.getElementById('stars');
+  for(let i=0;i<70;i++){
+    const s=document.createElement('div');s.className='star';
+    const sz=rnd(1,3);
+    s.style.cssText=`width:${sz}px;height:${sz}px;left:${rnd(0,100)}%;top:${rnd(0,100)}%;animation-duration:${rnd(20,60)/10}s;animation-delay:${rnd(0,8000)/1000}s;`;
+    c.appendChild(s);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+//  RENDER QUESTION
+// ═══════════════════════════════════════════════════════════
 function renderQ(){
-  if(G.idx>=G.pool.length){ G.pool=buildPool(); G.idx=0; }
-  G.cur=G.pool[G.idx];
+  stopTimer();
+
+  // Spaced repetition: inject a wrong question occasionally
+  if(N.space && SR_WRONG.length>0 && G.idx>0 && G.idx%4===0){
+    const srQ = SR_WRONG.shift();
+    G.cur = srQ;
+    srMode = true;
+    document.getElementById('srPanel').classList.add('show');
+  } else {
+    if(G.idx>=G.pool.length){
+      // rebuild pool
+      G.pool=buildPool(); G.idx=0;
+    }
+    G.cur=G.pool[G.idx];
+    srMode=false;
+    document.getElementById('srPanel').classList.remove('show');
+  }
   G.done=false;
 
   const q=G.cur;
-  const m=META[q.cat];
+  const dl=getDiffLevel();
 
-  // pill
-  const pill=document.getElementById('subjPill');
-  pill.className='subj-pill '+m.cls;
-  pill.textContent=m.lbl;
-  pill.style.animation='none'; pill.offsetHeight;
-  pill.style.animation='pillIn .4s cubic-bezier(.34,1.56,.64,1)';
-
-  // card
+  // Animate card
   const card=document.getElementById('qcard');
   card.style.animation='none'; card.offsetHeight;
-  card.style.animation='cardIn .42s cubic-bezier(.34,1.56,.64,1)';
+  card.style.animation='cardIn .4s cubic-bezier(.34,1.56,.64,1)';
   card.scrollTop=0;
+  card.className='qcard '+(dl===1?'diff-easy':dl===2?'diff-med':'diff-hard');
 
-  // times mini
-  const tm=document.getElementById('tmini');
+  // Diff chip
+  const dc=document.getElementById('diffChip');
+  dc.textContent=getDiffLabel();
+  dc.className='chip '+getDiffClass();
+
+  // Level badge
+  document.getElementById('lvlBadge').textContent=`Nivel ${G.level} · ${['','Aprendiendo','Creciendo','¡Memoriza!'][dl]}`;
+
+  // Mode label
+  const catLabel={times:'🔢 Tablas',math:'➕ Mates',en:'🇺🇸 Inglés',bible:'✝️ Biblia'};
+  document.getElementById('modeV').textContent=catLabel[q.cat||'math']||'';
+
+  // ── ADAPTIVE TABLE DISPLAY ──
+  const tmini=document.getElementById('tmini');
   if(q.cat==='times'){
-    tm.style.display='block';
-    renderMini(q.table,q.factor);
-  } else { tm.style.display='none'; }
+    if(dl===1){
+      // Full table
+      tmini.style.display='block';
+      renderMini(q.table, q.factor, false);
+    } else if(dl===2){
+      // Only current row + neighbors
+      tmini.style.display='block';
+      renderMiniPartial(q.table, q.factor);
+    } else {
+      // Level 3: NO table shown — must memorize!
+      tmini.style.display='none';
+    }
+  } else {
+    tmini.style.display='none';
+  }
 
-  // emoji
+  // ── MEMORY PALACE ──
+  const mp=document.getElementById('memPalace');
+  if(q.cat==='times' && dl<=2 && q.mem && N.hint){
+    mp.style.display='block';
+    mp.textContent='🧠 Truco: '+q.mem;
+  } else {
+    mp.style.display='none';
+  }
+
+  // Emoji
   const em=document.getElementById('qem');
   em.style.animation='none'; em.offsetHeight;
   em.style.animation='emPop .45s cubic-bezier(.34,1.56,.64,1)';
   em.textContent=q.emoji||'❓';
 
-  // text
+  // Text
   document.getElementById('qtxt').textContent=q.q;
 
-  // hint
+  // Hint (only levels 1-2)
   const hd=document.getElementById('qhint');
-  if(q.hint){ hd.style.display='block'; hd.textContent='💡 '+q.hint; }
+  if(q.hint && dl<=2 && N.hint){ hd.style.display='block'; hd.textContent='💡 '+q.hint; }
   else hd.style.display='none';
 
-  // choices
+  // Choices
   const grid=document.getElementById('ansGrid');
   grid.innerHTML='';
   const LTRS=['A','B','C','D'];
@@ -610,21 +581,35 @@ function renderQ(){
     const b=document.createElement('button');
     b.className='abtn';
     b.innerHTML=`<span class="ltr">${LTRS[i]}</span>${c}`;
-    b.dataset.val=c;
-    const handler=()=>checkAns(c,b);
-    b.addEventListener('click',handler);
-    b.addEventListener('touchend',e=>{e.preventDefault();handler();});
+    b.dataset.val=String(c);
+    const fn=()=>checkAns(String(c),b);
+    b.addEventListener('click',fn);
+    b.addEventListener('touchend',e=>{e.preventDefault();fn();});
     grid.appendChild(b);
   });
 
-  // reset
   hideFB();
   document.getElementById('nbtn').classList.remove('show');
   updateProg();
+
+  // Voice (Text-to-speech)
+  if(N.voice && 'speechSynthesis' in window){
+    const u=new SpeechSynthesisUtterance(q.q.replace(/[🔢🍎📚💰🌸🐥⭐🎯🌈🦋⚽🎂🚗🐠🧁🍬🎀🏃💎🌟❤️🕊️📜🎵🙏🍞🏔️👑📖🌍🐑🌊🐳🦁👴🍕🚌🎊✨🚀]/g,''));
+    u.lang='es-ES'; u.rate=0.88; u.pitch=1.1;
+    window.speechSynthesis.cancel();
+    setTimeout(()=>window.speechSynthesis.speak(u),200);
+  }
+
+  // Timer
+  if(N.timer){
+    const secs = dl===1?20:dl===2?15:12;
+    startTimer(secs);
+  }
 }
 
-function renderMini(t,hf){
-  document.getElementById('tminiT').textContent=`Tabla del ${t}`;
+// ── TABLE RENDERS ──
+function renderMini(t,hf,partial){
+  document.getElementById('tminiT').textContent=`Tabla del ${t} — Completa`;
   const g=document.getElementById('tminiG');
   g.innerHTML='';
   for(let i=1;i<=10;i++){
@@ -634,53 +619,120 @@ function renderMini(t,hf){
     g.appendChild(d);
   }
 }
+function renderMiniPartial(t,hf){
+  document.getElementById('tminiT').textContent=`Tabla del ${t} — Pista parcial`;
+  const g=document.getElementById('tminiG');
+  g.innerHTML='';
+  // Show only 3 rows: previous, current, next
+  for(let i=Math.max(1,hf-1);i<=Math.min(10,hf+1);i++){
+    const d=document.createElement('div');
+    d.className='tcell'+(i===hf?' hl':'');
+    d.innerHTML=`${t}×${i}<br><b>${t*i}</b>`;
+    g.appendChild(d);
+  }
+}
 
-// ═══════════════════════════════════
-//  CHECK
-// ═══════════════════════════════════
-function checkAns(val,btn){
-  if(G.done) return;
+// ═══════════════════════════════════════════════════════════
+//  TIMER
+// ═══════════════════════════════════════════════════════════
+const ARC_R=14; const ARC_C=2*Math.PI*ARC_R;
+function startTimer(secs){
+  const arcFg=document.getElementById('arcFg');
+  const arcTxt=document.getElementById('arcTxt');
+  const arcWrap=document.getElementById('arcWrap');
+  arcFg.style.strokeDasharray=ARC_C;
+  arcFg.style.strokeDashoffset='0';
+  arcFg.style.stroke=getComputedStyle(document.documentElement).getPropertyValue('--tl');
+  arcTxt.textContent=secs;
+  arcWrap.classList.add('on');
+  let remaining=secs;
+  G.timerInterval=setInterval(()=>{
+    remaining--;
+    arcTxt.textContent=remaining;
+    const pct=(secs-remaining)/secs;
+    arcFg.style.strokeDashoffset=ARC_C*pct;
+    if(remaining<=5) arcFg.style.stroke='#EF4444';
+    if(remaining<=0){
+      stopTimer();
+      if(!G.done) autoFail();
+    }
+  },1000);
+}
+function stopTimer(){
+  clearInterval(G.timerInterval);
+  document.getElementById('arcWrap').classList.remove('on');
+}
+function autoFail(){
+  // Times up → treat as wrong
   G.done=true;
-
   const correct=String(G.cur.a);
   document.querySelectorAll('.abtn').forEach(b=>{
     b.disabled=true;
-    if(String(b.dataset.val)===correct) b.classList.add(String(val)===correct?'correct':'reveal');
+    if(b.dataset.val===correct) b.classList.add('reveal');
   });
-  if(String(val)!==correct) btn.classList.add('wrong');
-
-  process(String(val)===correct);
+  process(false, true);
 }
 
-function process(ok){
+// ═══════════════════════════════════════════════════════════
+//  CHECK ANSWER
+// ═══════════════════════════════════════════════════════════
+function checkAns(val,btn){
+  if(G.done) return;
+  G.done=true;
+  stopTimer();
+  const correct=String(G.cur.a);
+  document.querySelectorAll('.abtn').forEach(b=>{
+    b.disabled=true;
+    if(b.dataset.val===correct) b.classList.add(val===correct?'correct':'reveal');
+  });
+  if(val!==correct) btn.classList.add('wrong');
+  process(val===correct, false);
+}
+
+function process(ok, timeout){
   G.total++;
   if(ok){
     G.streak++; G.corr++;
     const bonus=G.streak>=7?30:G.streak>=5?20:G.streak>=3?10:0;
     G.score+=10+bonus;
-    showFB(true, pick(CMSG)+(bonus>0?` ✨ +${bonus} bonus!`:''));
-    if(G.corr>0&&G.corr%5===0){ G.level++; showToast(`🌟 ¡Nivel ${G.level}! ¡Imparable!`); }
+    const msg=pick(CMSG)+(bonus>0?` ✨ +${bonus} bonus!`:'')+(timeout?'':' ');
+    showFB(true,msg);
+    if(G.corr>0&&G.corr%5===0){
+      G.level++;
+      const dl=getDiffLevel();
+      const lv3msg = dl===3 ? ' 🔥 ¡Sin tablas de ayuda ahora!' : dl===2 ? ' 🌿 ¡Pistas reducidas!' : '';
+      showToast(`🌟 ¡Nivel ${G.level}! ¡Imparable!`+lv3msg);
+    }
     if(G.total%8===0) confetti(false);
     if(G.score>0&&G.score%100===0) confetti(true);
   } else {
     G.streak=0; G.lives--;
-    showFB(false, pick(WMSG)+`  ✅ Era: ${G.cur.a}`);
+    const tMsg=timeout?' ⏰ ¡Se acabó el tiempo!':'';
+    showFB(false,pick(WMSG)+`  ✅ Era: ${G.cur.a}`+tMsg);
     heartShake();
-    if(G.lives<=0){ setTimeout(showGO,750); return; }
+    // Spaced repetition: save wrong question
+    if(N.space && SR_WRONG.length<15){
+      const copy={...G.cur};
+      SR_WRONG.push(copy);
+    }
+    if(G.lives<=0){ setTimeout(showGO,800); return; }
   }
   updateHUD();
   document.getElementById('nbtn').classList.add('show');
   updateProg();
 }
 
-// ═══════════════════════════════════
+// ═══════════════════════════════════════════════════════════
 //  NAVIGATION
-// ═══════════════════════════════════
-function nextQ(){ G.idx++; renderQ(); }
+// ═══════════════════════════════════════════════════════════
+function nextQ(){
+  if(!srMode) G.idx++;
+  renderQ();
+}
 
-// ═══════════════════════════════════
+// ═══════════════════════════════════════════════════════════
 //  HUD / PROGRESS
-// ═══════════════════════════════════
+// ═══════════════════════════════════════════════════════════
 function updateHUD(){
   const row=document.getElementById('livesRow');
   row.innerHTML='';
@@ -692,13 +744,13 @@ function updateHUD(){
   }
   document.getElementById('scoreV').textContent=G.score;
   document.getElementById('streakV').textContent=G.streak;
-  document.getElementById('levelV').textContent=G.level;
 }
 function updateProg(){
   const total=G.pool.length;
-  const pct=Math.round((G.idx/total)*100);
+  const pct=Math.min(100,Math.round((G.idx/total)*100));
   document.getElementById('progFill').style.width=pct+'%';
-  document.getElementById('progTxt').textContent=`Pregunta ${G.idx+1} de ${total}`;
+  document.getElementById('progTxt').textContent=
+    `Pregunta ${G.idx+1} · ${srMode?'📚 Repaso':''}`;
   document.getElementById('progPct').textContent=pct+'%';
 }
 function heartShake(){
@@ -707,9 +759,9 @@ function heartShake(){
   setTimeout(()=>r.style.animation='',400);
 }
 
-// ═══════════════════════════════════
+// ═══════════════════════════════════════════════════════════
 //  FEEDBACK
-// ═══════════════════════════════════
+// ═══════════════════════════════════════════════════════════
 function showFB(ok,msg){
   const d=document.getElementById('fback');
   d.className='fback show '+(ok?'good':'bad');
@@ -717,20 +769,21 @@ function showFB(ok,msg){
 }
 function hideFB(){ document.getElementById('fback').className='fback'; }
 
-// ═══════════════════════════════════
-//  GAME OVER + PIN
-// ═══════════════════════════════════
+// ═══════════════════════════════════════════════════════════
+//  GAME OVER  ·  CLAVE BÍBLICA: edad de Matusalén = 969
+// ═══════════════════════════════════════════════════════════
 function showGO(){
   document.getElementById('perr').textContent='';
-  ['p0','p1','p2','p3'].forEach(id=>document.getElementById(id).value='');
+  ['p0','p1','p2'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('ovGO').classList.add('show');
-  setTimeout(()=>document.getElementById('p0').focus(),320);
+  setTimeout(()=>document.getElementById('p0').focus(),350);
 }
 function setupPin(){
-  ['p0','p1','p2','p3'].forEach((id,i)=>{
+  // 3-digit PIN for 969
+  ['p0','p1','p2'].forEach((id,i)=>{
     const el=document.getElementById(id);
     el.addEventListener('input',()=>{
-      if(el.value.length===1&&i<3) document.getElementById('p'+(i+1)).focus();
+      if(el.value.length===1&&i<2) document.getElementById('p'+(i+1)).focus();
     });
     el.addEventListener('keydown',e=>{
       if(e.key==='Backspace'&&!el.value&&i>0) document.getElementById('p'+(i-1)).focus();
@@ -739,46 +792,57 @@ function setupPin(){
   });
 }
 function checkPin(){
-  const pin=['p0','p1','p2','p3'].map(id=>document.getElementById(id).value).join('');
-  if(pin==='1819'){
+  const pin=['p0','p1','p2'].map(id=>document.getElementById(id).value).join('');
+  if(pin==='969'){
     document.getElementById('ovGO').classList.remove('show');
-    G.lives=G.max; updateHUD();
+    // Reiniciar completamente el juego
+    G.lives=G.max; G.score=0; G.streak=0; G.level=1;
+    G.corr=0; G.total=0;
+    G.pool=buildPool(); G.idx=0;
+    SR_WRONG.length=0;
+    updateHUD();
+    document.getElementById('lvlBadge').textContent='Nivel 1 · Aprendiendo';
+    renderQ();
+    showToast('✅ ¡Bienvenida de nuevo, campeona! 🎉');
+    confetti(false);
   } else {
-    document.getElementById('perr').textContent='❌ Clave incorrecta. Inténtalo de nuevo.';
-    ['p0','p1','p2','p3'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('perr').textContent='❌ Esa no es la edad de Matusalén. ¡Inténtalo de nuevo!';
+    ['p0','p1','p2'].forEach(id=>document.getElementById(id).value='');
     document.getElementById('p0').focus();
-    const pr=document.querySelector('.pin-row');
-    pr.style.animation='wshk .32s ease';
-    setTimeout(()=>pr.style.animation='',400);
+    const pr=document.getElementById('pinRow3');
+    pr.style.animation='wshk .35s ease';
+    setTimeout(()=>pr.style.animation='',450);
   }
 }
 function restart(){
   ['ovGO','ovWin'].forEach(id=>document.getElementById(id).classList.remove('show'));
-  G.lives=G.max;G.score=0;G.streak=0;G.level=1;G.corr=0;G.total=0;
-  G.pool=buildPool();G.idx=0;
-  updateHUD();renderQ();
+  G.lives=G.max; G.score=0; G.streak=0; G.level=1;
+  G.corr=0; G.total=0;
+  G.pool=buildPool(); G.idx=0;
+  SR_WRONG.length=0;
+  updateHUD();
+  renderQ();
 }
 
-// ═══════════════════════════════════
+// ═══════════════════════════════════════════════════════════
 //  TOAST
-// ═══════════════════════════════════
+// ═══════════════════════════════════════════════════════════
 function showToast(msg){
   const t=document.getElementById('toast');
   t.textContent=msg;
   t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),2800);
+  setTimeout(()=>t.classList.remove('show'),3000);
 }
 
-// ═══════════════════════════════════
+// ═══════════════════════════════════════════════════════════
 //  CONFETTI
-// ═══════════════════════════════════
+// ═══════════════════════════════════════════════════════════
 function confetti(big){
   const box=document.getElementById('cfbox');
   const cols=['#FF5FAA','#8B5CF6','#FBBF24','#14B8A6','#22C55E','#F97316','#fff'];
   const n=big?160:55;
   for(let i=0;i<n;i++){
-    const p=document.createElement('div');
-    p.className='cf';
+    const p=document.createElement('div');p.className='cf';
     const sz=rnd(7,15);
     p.style.cssText=`left:${rnd(0,100)}%;top:-20px;width:${sz}px;height:${sz}px;background:${pick(cols)};border-radius:${Math.random()>.5?'50%':'3px'};animation-duration:${rnd(18,38)/10}s;animation-delay:${rnd(0,1800)/1000}s;transform:rotate(${rnd(0,360)}deg);`;
     box.appendChild(p);
@@ -786,24 +850,18 @@ function confetti(big){
   }
 }
 
-// ═══════════════════════════════════
+// ═══════════════════════════════════════════════════════════
 //  KEYBOARD
-// ═══════════════════════════════════
+// ═══════════════════════════════════════════════════════════
 document.addEventListener('keydown',e=>{
-  if(e.key==='Enter'){
-    if(document.getElementById('nbtn').classList.contains('show')) nextQ();
-  }
-  if(['1','2','3','4'].includes(e.key)){
+  if(e.key==='Enter' && document.getElementById('nbtn').classList.contains('show')) nextQ();
+  if(['1','2','3','4'].includes(e.key))
     [...document.querySelectorAll('.abtn:not(:disabled)')][+e.key-1]?.click();
-  }
 });
 
-// prevent zoom
-document.addEventListener('touchstart',()=>{},{passive:true});
-
-// ═══════════════════════════════════
-//  GO! 🚀
-// ═══════════════════════════════════
+// ═══════════════════════════════════════════════════════════
+//  START 🚀
+// ═══════════════════════════════════════════════════════════
 init();
 </script>
 </body>
