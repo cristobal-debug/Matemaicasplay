@@ -3,172 +3,197 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Math & Stories Adventure</title>
+    <title>Misión Estelar: Familia & Saber</title>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #ff007f;
-            --secondary: #00d2ff;
-            --forest: #00b894;
-            --dark: #1a1a2e;
+            --primary: #a29bfe;
+            --secondary: #55efc4;
+            --danger: #ff7675;
+            --dark: #2d3436;
         }
 
         body, html {
             margin: 0; padding: 0; height: 100%; width: 100%;
             font-family: 'Fredoka', sans-serif;
-            background: var(--dark);
-            color: white; overflow: hidden;
+            background: #0f0c29; color: white; overflow: hidden;
         }
 
-        /* Fondo de Galaxia Animado */
-        #stars-canvas { position: fixed; top:0; left:0; z-index: -1; }
-
+        /* HUD Superior */
         .hud {
             position: absolute; top: 0; width: 100%; display: flex;
             justify-content: space-between; padding: 20px; box-sizing: border-box;
-            font-size: 1.5rem; z-index: 100; pointer-events: none;
+            font-size: 1.2rem; z-index: 100; pointer-events: none;
+            background: rgba(0,0,0,0.3);
         }
 
+        .lives { color: var(--danger); font-size: 1.5rem; letter-spacing: 5px; }
+
+        /* Contenedor de Juego */
         .game-screen {
             height: 100%; display: flex; flex-direction: column;
-            align-items: center; justify-content: flex-start; padding-top: 80px;
+            align-items: center; justify-content: center;
         }
 
-        .question-card {
+        .question-box {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
-            padding: 20px 40px; border-radius: 30px;
-            border: 2px solid var(--secondary);
-            text-align: center; box-shadow: 0 0 30px rgba(0, 210, 255, 0.3);
-            margin-bottom: 20px;
+            padding: 20px 30px; border-radius: 20px;
+            border: 2px solid var(--primary);
+            text-align: center; margin-bottom: 20px;
+            max-width: 80%;
         }
 
-        .math-text { font-size: 4rem; margin: 0; color: white; }
-        .eng-sub { font-size: 1.2rem; color: var(--secondary); }
+        #main-q { font-size: 3rem; margin: 10px 0; }
+        #sub-q { font-size: 1.2rem; color: var(--secondary); margin-bottom: 10px; }
 
         /* Burbujas */
         .bubble {
-            position: absolute; width: 90px; height: 90px;
-            background: radial-gradient(circle at 30% 30%, white, var(--secondary));
+            position: absolute; width: 85px; height: 85px;
+            background: radial-gradient(circle at 30% 30%, #ffffff, var(--primary));
             border-radius: 50%; display: flex; justify-content: center;
-            align-items: center; font-size: 2rem; color: var(--dark);
-            font-weight: bold; cursor: pointer;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-            z-index: 50; transition: transform 0.1s;
+            align-items: center; font-size: 1.8rem; color: var(--dark);
+            font-weight: bold; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            z-index: 50;
         }
 
-        /* Modal de Acertijo / Boss */
-        .portal {
-            position: fixed; top:0; left:0; width:100%; height:100%;
-            background: rgba(26, 26, 46, 0.95);
-            display: none; flex-direction: column;
-            align-items: center; justify-content: center; z-index: 200;
-            padding: 20px; text-align: center;
+        /* Opciones de respuesta (Para Biblia e Inglés) */
+        .options-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+            width: 90%; max-width: 400px;
         }
 
-        .portal-content {
-            background: white; color: var(--dark);
-            padding: 30px; border-radius: 30px; border: 5px solid var(--primary);
-            max-width: 500px; width: 90%;
+        .opt-btn {
+            background: white; color: var(--dark); border: none;
+            padding: 15px; border-radius: 15px; font-size: 1rem;
+            font-weight: bold; cursor: pointer; transition: 0.2s;
         }
 
-        .portal input {
-            width: 120px; font-size: 2.5rem; border: 3px solid var(--primary);
-            border-radius: 15px; text-align: center; margin: 20px;
+        .opt-btn:active { transform: scale(0.95); }
+
+        /* Modales */
+        .modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); display: none;
+            flex-direction: column; align-items: center; justify-content: center;
+            z-index: 500; text-align: center; padding: 20px;
+        }
+
+        .modal-content {
+            background: white; color: var(--dark); padding: 30px;
+            border-radius: 25px; border: 5px solid var(--danger);
+        }
+
+        .btn-accept {
+            background: var(--dark); color: white; padding: 10px 30px;
+            border-radius: 10px; border: none; font-size: 1.2rem;
+            margin-top: 20px; cursor: pointer;
         }
 
         #start-screen {
-            position: fixed; top:0; left:0; width:100%; height:100%;
-            background: var(--dark); z-index: 300;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--dark); z-index: 600; display: flex;
+            flex-direction: column; align-items: center; justify-content: center;
         }
 
-        .btn-start {
-            padding: 20px 60px; font-size: 2rem; background: var(--primary);
-            border: none; border-radius: 50px; color: white; cursor: pointer;
-            box-shadow: 0 0 30px var(--primary);
+        .btn-play {
+            background: var(--secondary); color: var(--dark);
+            padding: 20px 50px; font-size: 2rem; border-radius: 50px;
+            border: none; cursor: pointer; font-weight: bold;
         }
     </style>
 </head>
 <body>
 
-<canvas id="stars-canvas"></canvas>
-
 <div id="start-screen">
-    <h1 style="font-size: 3rem; color: var(--secondary);">✨ Misión Galáctica ✨</h1>
-    <p>Math & Stories Bilingüe</p>
-    <button class="btn-start" onclick="startGame()">¡DESPEGAR!</button>
+    <h1 style="color: var(--primary);">🌟 SUPER MISIÓN 🌟</h1>
+    <p>Matemáticas • Inglés • Biblia</p>
+    <button class="btn-play" onclick="init()">EMPEZAR</button>
 </div>
 
 <div class="hud">
-    <div>Nivel: <span id="lvl">1</span></div>
-    <div>XP: <span id="xp">0</span> 🌟</div>
+    <div>XP: <span id="xp">0</span></div>
+    <div class="lives" id="lives-display">❤️❤️❤️</div>
 </div>
 
-<div class="game-screen">
-    <div class="question-card">
-        <div class="eng-sub" id="eng-q">Ready?</div>
-        <div class="math-text" id="math-q">? x ?</div>
+<div class="game-screen" id="game-screen">
+    <div class="question-box" id="q-box">
+        <div id="sub-q">Cargando...</div>
+        <div id="main-q">?</div>
     </div>
+    <div class="options-grid" id="options-area"></div>
 </div>
 
-<div class="portal" id="portal">
-    <div class="portal-content">
-        <h2 id="portal-title">📖 ¡Mini Historia!</h2>
-        <p id="riddle-esp" style="font-size: 1.2rem; font-weight: bold;"></p>
-        <p id="riddle-eng" style="font-style: italic; color: #555;"></p>
-        <input type="number" id="riddle-input" placeholder="?">
-        <br>
-        <button class="btn-start" style="font-size: 1.2rem; padding: 10px 30px;" onclick="checkRiddle()">Resolver Portal</button>
+<div class="modal" id="papa-modal">
+    <div class="modal-content">
+        <h2 style="color: var(--danger);">🚨 ¡CUIDADO! 🚨</h2>
+        <p style="font-size: 1.3rem;"><b>Tu papá está viendo el puntaje y te va a poner una <span style="font-size: 2rem;">X</span> en la nevera.</b></p>
+        <p>¡Concéntrate más!</p>
+        <button class="btn-accept" onclick="closePapaModal()">LO SIENTO, ACEPTO</button>
     </div>
 </div>
 
 <script>
     let xp = 0;
-    let n1, n2, correct;
-    const engNums = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve"];
+    let lives = 3;
+    let currentCorrect = null;
+    let gameType = 'math'; // 'math', 'english', 'bible'
     
-    const riddles = [
-        { esp: "Un pulpo tiene 8 brazos. Si hay 3 pulpos bailando, ¿cuántos brazos hay?", eng: "An octopus has 8 arms. If there are 3 octopuses dancing, how many arms?", ans: 24 },
-        { esp: "Cada caja de galletas tiene 6 galletas. Si compras 5 cajas, ¿cuántas tienes?", eng: "Each cookie box has 6 cookies. If you buy 5 boxes, how many do you have?", ans: 30 },
-        { esp: "Un gato come 2 peces al día. Si tienes 7 gatos, ¿cuántos peces necesitas?", eng: "A cat eats 2 fish a day. If you have 7 cats, how many fish do you need?", ans: 14 }
+    const bibleQuestions = [
+        { q: "¿Quién construyó el Arca?", a: "Noé", opts: ["Moisés", "Noé", "David", "Adán"] },
+        { q: "¿Quién venció al gigante Goliat?", a: "David", opts: ["David", "Salomón", "Sansón", "Saúl"] },
+        { q: "¿Cuántos días tardó Dios en crear el mundo?", a: "6", opts: ["7", "6", "10", "3"] },
+        { q: "¿Quién fue el primer hombre?", a: "Adán", opts: ["Jesús", "Adán", "Abrahán", "Pedro"] }
     ];
 
-    function startGame() {
+    const englishQuestions = [
+        { q: "How do you say 'Hola'?", a: "Hello", opts: ["Bye", "Hello", "Thanks", "Dog"] },
+        { q: "What color is the sky?", a: "Blue", opts: ["Red", "Green", "Blue", "Yellow"] },
+        { q: "How do you say 'Manzana'?", a: "Apple", opts: ["Pear", "Grape", "Apple", "Orange"] },
+        { q: "What is 'Dog'?", a: "Perro", opts: ["Gato", "Perro", "Pájaro", "Pez"] }
+    ];
+
+    function init() {
         document.getElementById('start-screen').style.display = 'none';
-        nextQuestion();
-        drawStars();
+        nextRound();
     }
 
-    function speak(text) {
-        const utter = new SpeechSynthesisUtterance(text);
-        utter.lang = 'en-US';
-        utter.rate = 0.9;
-        window.speechSynthesis.speak(utter);
-    }
+    function nextRound() {
+        // Limpiar área
+        document.getElementById('options-area').innerHTML = '';
+        const bubbles = document.querySelectorAll('.bubble');
+        bubbles.forEach(b => b.remove());
 
-    function nextQuestion() {
-        // Cada 5 puntos, un acertijo
-        if (xp > 0 && xp % 50 === 0) {
-            triggerPortal();
-            return;
+        // Elegir tipo de juego aleatorio
+        const rand = Math.random();
+        if (rand < 0.5) gameType = 'math';
+        else if (rand < 0.75) gameType = 'english';
+        else gameType = 'bible';
+
+        if (gameType === 'math') {
+            setupMath();
+        } else {
+            setupQuiz();
         }
-
-        n1 = Math.floor(Math.random() * 8) + 2;
-        n2 = Math.floor(Math.random() * 9) + 1;
-        correct = n1 * n2;
-
-        document.getElementById('math-q').innerText = `${n1} x ${n2}`;
-        document.getElementById('eng-q').innerText = `${engNums[n1]} times ${engNums[n2]}`;
-        speak(`${engNums[n1]} times ${engNums[n2]}`);
-        
-        spawnBubbles();
     }
 
-    function spawnBubbles() {
-        const existing = document.querySelectorAll('.bubble');
-        existing.forEach(b => b.remove());
+    function setupMath() {
+        const n1 = Math.floor(Math.random() * 9) + 2;
+        const n2 = Math.floor(Math.random() * 9) + 1;
+        currentCorrect = n1 * n2;
 
+        document.getElementById('sub-q').innerText = "TABLAS DE MULTIPLICAR";
+        document.getElementById('main-q').innerText = `${n1} x ${n2}`;
+        
+        // Voz en inglés de la tabla
+        const talk = new SpeechSynthesisUtterance(`${n1} times ${n2}`);
+        talk.lang = 'en-US';
+        window.speechSynthesis.speak(talk);
+
+        spawnBubbles(currentCorrect);
+    }
+
+    function spawnBubbles(correct) {
         let options = [correct];
         while(options.length < 4) {
             let fake = (Math.floor(Math.random()*9)+2) * (Math.floor(Math.random()*9)+1);
@@ -181,29 +206,22 @@
             b.className = 'bubble';
             b.innerText = val;
             b.style.left = (15 + (i * 20)) + '%';
-            b.style.top = '100%';
             
-            let pos = 100;
-            let speed = 0.4 + (Math.random() * 0.4);
+            let pos = 110;
+            let speed = 0.2 + (Math.random() * 0.2); // BURBUJAS MÁS LENTAS
 
             function move() {
                 pos -= speed;
                 b.style.top = pos + '%';
-                b.style.transform = `translateX(${Math.sin(pos/10)*15}px)`;
-                if(pos < -15) pos = 105; // Loop
+                if(pos < -15) pos = 110;
                 if(b.parentNode) requestAnimationFrame(move);
             }
             
             b.onclick = () => {
                 if(val === correct) {
-                    xp += 10;
-                    document.getElementById('xp').innerText = xp;
-                    b.style.background = "var(--forest)";
-                    speak("Correct!");
-                    setTimeout(nextQuestion, 500);
+                    winPoint();
                 } else {
-                    b.style.transform = "scale(0.8)";
-                    b.style.opacity = "0.5";
+                    failLife();
                 }
             };
             document.body.appendChild(b);
@@ -211,51 +229,58 @@
         });
     }
 
-    function triggerPortal() {
-        const p = document.getElementById('portal');
-        const r = riddles[Math.floor(Math.random()*riddles.length)];
-        document.getElementById('riddle-esp').innerText = r.esp;
-        document.getElementById('riddle-eng').innerText = r.eng;
-        document.getElementById('riddle-input').value = '';
-        p.style.display = 'flex';
-        p.dataset.ans = r.ans;
-        speak(r.eng);
+    function setupQuiz() {
+        const list = (gameType === 'english') ? englishQuestions : bibleQuestions;
+        const item = list[Math.floor(Math.random() * list.length)];
+        
+        document.getElementById('sub-q').innerText = gameType.toUpperCase();
+        document.getElementById('main-q').innerText = item.q;
+        currentCorrect = item.a;
+
+        item.opts.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.className = 'opt-btn';
+            btn.innerText = opt;
+            btn.onclick = () => {
+                if(opt === currentCorrect) winPoint();
+                else failLife();
+            };
+            document.getElementById('options-area').appendChild(btn);
+        });
     }
 
-    function checkRiddle() {
-        const val = parseInt(document.getElementById('riddle-input').value);
-        const ans = parseInt(document.getElementById('portal').dataset.ans);
-        if(val === ans) {
-            xp += 10; // Extra XP
-            document.getElementById('xp').innerText = xp;
-            document.getElementById('portal').style.display = 'none';
-            nextQuestion();
-        } else {
-            document.querySelector('.portal-content').style.borderColor = 'red';
-            setTimeout(() => document.querySelector('.portal-content').style.borderColor = 'var(--primary)', 500);
+    function winPoint() {
+        xp += 10;
+        document.getElementById('xp').innerText = xp;
+        document.getElementById('q-box').style.borderColor = 'var(--secondary)';
+        setTimeout(nextRound, 600);
+    }
+
+    function failLife() {
+        lives--;
+        updateLives();
+        document.getElementById('papa-modal').style.display = 'flex';
+    }
+
+    function updateLives() {
+        const display = "❤️".repeat(lives) + "🖤".repeat(3 - lives);
+        document.getElementById('lives-display').innerText = display;
+        if(lives <= 0) {
+            alert("¡GAME OVER! Vamos a estudiar un poco más con papá.");
+            location.reload();
         }
     }
 
-    // Fondo Espacial
-    function drawStars() {
-        const canvas = document.getElementById('stars-canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-
-        function anim() {
-            ctx.fillStyle = 'rgba(26, 26, 46, 0.1)';
-            ctx.fillRect(0,0,canvas.width, canvas.height);
-            ctx.fillStyle = 'white';
-            for(let i=0; i<3; i++) {
-                ctx.beginPath();
-                ctx.arc(Math.random()*canvas.width, Math.random()*canvas.height, Math.random()*2, 0, Math.PI*2);
-                ctx.fill();
-            }
-            requestAnimationFrame(anim);
-        }
-        anim();
+    function closePapaModal() {
+        document.getElementById('papa-modal').style.display = 'none';
+        nextRound();
     }
+
+    function updateLives() {
+        const display = "❤️".repeat(Math.max(0, lives)) + "🖤".repeat(Math.max(0, 3 - lives));
+        document.getElementById('lives-display').innerText = display;
+    }
+
 </script>
 </body>
 </html>
