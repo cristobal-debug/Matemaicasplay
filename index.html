@@ -1,339 +1,141 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Magic Forest Mates 🧚‍♀️</title>
-    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;800&display=swap" rel="stylesheet">
+    <title>Math Forest Adventure</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg-top: #2d3436;
-            --bg-bottom: #00b894;
-            --bubble: #81ecec;
-            --accent: #fdcb6e;
+        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; font-family: 'Fredoka', sans-serif; background: #0f0c29; }
+        #canvas-bg { position: fixed; top: 0; left: 0; z-index: -1; }
+        .ui-layer { position: relative; z-index: 10; pointer-events: none; color: white; padding: 20px; display: flex; justify-content: space-between; }
+        .question-box { position: absolute; top: 20%; left: 50%; transform: translate(-50%, -50%); text-align: center; pointer-events: none; }
+        .math-q { font-size: 5rem; text-shadow: 0 0 20px #00d2ff; margin: 0; }
+        .eng-q { font-size: 1.5rem; color: #00d2ff; opacity: 0.8; }
+        .bubble { 
+            position: absolute; width: 100px; height: 100px; background: rgba(255,255,255,0.2); 
+            border: 3px solid rgba(255,255,255,0.5); border-radius: 50%; display: flex; 
+            justify-content: center; align-items: center; font-size: 2.5rem; color: white; 
+            cursor: pointer; pointer-events: auto; backdrop-filter: blur(5px);
+            box-shadow: 0 0 20px rgba(0,210,255,0.4); transition: transform 0.1s;
         }
-
-        body {
-            font-family: 'Baloo 2', cursive;
-            background: linear-gradient(180deg, var(--bg-top) 0%, var(--bg-bottom) 100%);
-            margin: 0;
-            height: 100vh;
-            overflow: hidden; /* Para que las burbujas no se salgan */
-            color: white;
-            display: flex;
-            flex-direction: column;
-            user-select: none;
+        .bubble:active { transform: scale(0.9); }
+        #start-btn { 
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            padding: 20px 50px; font-size: 2rem; background: #00d2ff; border: none; 
+            border-radius: 50px; color: white; cursor: pointer; z-index: 100;
+            box-shadow: 0 0 30px #00d2ff;
         }
-
-        /* Interfaz Superior */
-        .hud {
-            padding: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(0,0,0,0.3);
-            z-index: 10;
-        }
-
-        .score { font-size: 1.5rem; color: var(--accent); }
-
-        .question-container {
-            text-align: center;
-            margin-top: 20px;
-            z-index: 10;
-        }
-
-        .math-text { font-size: 4rem; text-shadow: 2px 2px 10px rgba(0,0,0,0.5); margin: 0; }
-        .english-text { font-size: 1.5rem; color: #dfe6e9; margin: 5px 0; }
-        
-        .btn-audio {
-            background: var(--accent);
-            border: none;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            font-size: 1.5rem;
-            cursor: pointer;
-            box-shadow: 0 4px 0 #e1b12c;
-            transition: transform 0.1s;
-        }
-        .btn-audio:active { transform: translateY(4px); box-shadow: none; }
-
-        /* Área de Burbujas */
-        .game-area {
-            flex-grow: 1;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .bubble {
-            position: absolute;
-            width: 80px;
-            height: 80px;
-            background: rgba(255, 255, 255, 0.9);
-            border: 4px solid var(--bubble);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 2rem;
-            font-weight: bold;
-            color: #2d3436;
-            cursor: pointer;
-            box-shadow: inset -5px -5px 15px rgba(0,0,0,0.1), 0 5px 15px rgba(0,0,0,0.3);
-            animation: floatUp linear infinite;
-        }
-
-        @keyframes floatUp {
-            0% { transform: translateY(100vh) scale(0.8) rotate(0deg); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { transform: translateY(-100px) scale(1.1) rotate(20deg); opacity: 0; }
-        }
-
-        /* Modal de Acertijos (Boss) */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8);
-            justify-content: center;
-            align-items: center;
-            z-index: 100;
-        }
-
-        .modal-content {
-            background: white;
-            color: #2d3436;
-            padding: 30px;
-            border-radius: 20px;
-            text-align: center;
-            width: 80%;
-            max-width: 400px;
-            box-shadow: 0 0 30px var(--accent);
-        }
-
-        .modal input {
-            width: 100px;
-            font-size: 2rem;
-            text-align: center;
-            margin: 15px 0;
-            border: 3px solid var(--bg-bottom);
-            border-radius: 10px;
-        }
-
-        .btn-modal {
-            background: var(--bg-bottom);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            font-size: 1.2rem;
-            border-radius: 10px;
-            cursor: pointer;
-        }
-        
-        #startScreen {
-            position: fixed; top:0; left:0; width:100%; height:100%;
-            background: var(--bg-top); z-index: 200;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-        }
-
     </style>
 </head>
 <body>
 
-<div id="startScreen">
-    <h1 style="color:var(--accent); font-size:3rem; text-align:center;">Magic Forest 🌲<br>Math & English</h1>
-    <button class="btn-audio" style="width:150px; border-radius:20px;" onclick="startGame()">¡JUGAR!</button>
+<canvas id="canvas-bg"></canvas>
+<button id="start-btn" onclick="init()">START MISSION 🚀</button>
+
+<div class="ui-layer">
+    <div id="score">XP: 0</div>
+    <div id="lives">❤️❤️❤️</div>
 </div>
 
-<div class="hud">
-    <div class="score">Puntos: <span id="score">0</span> 🌟</div>
-    <div style="font-size: 1.5rem;">❤️❤️❤️</div>
-</div>
-
-<div class="question-container">
-    <div class="math-text" id="question">? x ?</div>
-    <div class="english-text" id="engText">...</div>
-    <button class="btn-audio" onclick="playAudio()">🔊</button>
-</div>
-
-<div class="game-area" id="gameArea"></div>
-
-<div class="modal" id="bossModal">
-    <div class="modal-content">
-        <h2>👾 ¡ACERTIJO DEL DUENDE! 👾</h2>
-        <p id="riddleTextEsp" style="font-weight:bold;"></p>
-        <p id="riddleTextEng" style="color:#636e72; font-style:italic;"></p>
-        <input type="number" id="bossAnswer" placeholder="?">
-        <br>
-        <button class="btn-modal" onclick="checkBoss()">Responder</button>
-    </div>
+<div class="question-box">
+    <div class="eng-q" id="eng-q">Ready?</div>
+    <div class="math-q" id="math-q">? x ?</div>
 </div>
 
 <script>
-    let n1, n2, correctAns;
     let score = 0;
-    let bubblesInterval;
-    
-    // Diccionario para pronunciar en inglés
-    const numbersEng = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"];
-    
-    // Lista de acertijos (Boss Fights)
-    const riddles = [
-        {
-            esp: "Un perro tiene 4 patas. Si veo 3 perros en el bosque, ¿cuántas patas hay en total?",
-            eng: "A dog has 4 legs. If I see 3 dogs, how many legs are there?",
-            ans: 12
-        },
-        {
-            esp: "Tienes 5 cajas mágicas. Cada caja tiene 5 monedas de oro. ¿Cuántas monedas tienes?",
-            eng: "You have 5 magic boxes. Each box has 5 gold coins. How many coins do you have?",
-            ans: 25
-        },
-        {
-            esp: "Una araña tiene 8 patas. ¿Cuántas patas tienen 2 arañas juntas?",
-            eng: "A spider has 8 legs. How many legs do 2 spiders have together?",
-            ans: 16
-        }
-    ];
+    let n1, n2, correct;
+    const colors = ['#00d2ff', '#92fe9d', '#ff7675', '#fdcb6e'];
+    const engNums = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve"];
 
-    function startGame() {
-        document.getElementById('startScreen').style.display = 'none';
-        // Desbloquear audio
-        let utter = new SpeechSynthesisUtterance("Let's play!");
-        utter.lang = 'en-US';
-        speechSynthesis.speak(utter);
-        
-        nextLevel();
+    function init() {
+        document.getElementById('start-btn').style.display = 'none';
+        nextQuestion();
+        animate();
     }
 
-    function playAudio() {
-        const textToSpeak = `${numbersEng[n1]} times ${numbersEng[n2]}`;
-        const utterance = new SpeechSynthesisUtterance(textToSpeak);
-        utterance.lang = 'en-US';
-        utterance.rate = 0.8; // Habla un poquito más lento para que lo entienda
-        speechSynthesis.speak(utterance);
+    function nextQuestion() {
+        n1 = Math.floor(Math.random() * 9) + 2;
+        n2 = Math.floor(Math.random() * 10) + 1;
+        correct = n1 * n2;
+        
+        document.getElementById('math-q').innerText = `${n1} x ${n2}`;
+        document.getElementById('eng-q').innerText = `${engNums[n1]} times ${engNums[n2]}`;
+        
+        // Voz en Inglés
+        const talk = new SpeechSynthesisUtterance(`${engNums[n1]} times ${engNums[n2]}`);
+        talk.lang = 'en-US';
+        window.speechSynthesis.speak(talk);
+
+        createBubbles();
     }
 
-    function nextLevel() {
-        // ¿Toca Boss Fight? (Cada 5 puntos)
-        if (score > 0 && score % 5 === 0) {
-            triggerBoss();
-            return;
+    function createBubbles() {
+        const existing = document.querySelectorAll('.bubble');
+        existing.forEach(b => b.remove());
+
+        let options = [correct];
+        while(options.length < 4) {
+            let fake = (Math.floor(Math.random()*10)+1) * (Math.floor(Math.random()*10)+1);
+            if(!options.includes(fake)) options.push(fake);
         }
+        options.sort(() => Math.random() - 0.5);
 
-        document.getElementById('gameArea').innerHTML = ''; // Limpiar burbujas
-        
-        n1 = Math.floor(Math.random() * 9) + 2; // Tabla del 2 al 10
-        n2 = Math.floor(Math.random() * 9) + 2;
-        correctAns = n1 * n2;
-
-        document.getElementById('question').innerText = `${n1} x ${n2}`;
-        document.getElementById('engText').innerText = `${numbersEng[n1]} times ${numbersEng[n2]}`;
-        
-        // Reproducir audio automáticamente al salir la pregunta (Opcional, lo comento para que ella decida si pulsar el botón)
-        // playAudio();
-
-        spawnBubbles();
-    }
-
-    function spawnBubbles() {
-        const area = document.getElementById('gameArea');
-        area.innerHTML = '';
-        
-        // Generar 1 correcta y 3 falsas
-        let answers = [correctAns];
-        while(answers.length < 4) {
-            let fake = (Math.floor(Math.random() * 9) + 2) * (Math.floor(Math.random() * 9) + 2);
-            if(!answers.includes(fake)) answers.push(fake);
-        }
-        
-        // Desordenar las respuestas
-        answers.sort(() => Math.random() - 0.5);
-
-        // Crear las burbujas HTML
-        answers.forEach((ans, index) => {
-            let bub = document.createElement('div');
-            bub.className = 'bubble';
-            bub.innerText = ans;
+        options.forEach((opt, i) => {
+            const b = document.createElement('div');
+            b.className = 'bubble';
+            b.innerText = opt;
+            b.style.left = (20 + (i * 20)) + '%';
+            b.style.top = '100%';
             
-            // Posición aleatoria horizontal (10% a 80% del ancho)
-            bub.style.left = Math.floor(Math.random() * 70) + 10 + '%';
-            // Velocidades de subida diferentes
-            let duration = Math.floor(Math.random() * 4) + 4; // Entre 4s y 7s
-            bub.style.animationDuration = duration + 's';
-            // Retraso para que no salgan todas a la vez
-            bub.style.animationDelay = (index * 0.5) + 's';
+            // Animación de subida
+            let pos = 100;
+            let speed = 0.5 + (Math.random() * 0.5);
+            let drift = Math.sin(i) * 2;
 
-            bub.onclick = () => checkBubble(ans, bub);
+            function move() {
+                if (pos < -20) { pos = 110; } // Reaparece abajo
+                pos -= speed;
+                b.style.top = pos + '%';
+                b.style.transform = `translateX(${Math.sin(pos/10) * 20}px)`;
+                if (b.parentNode) requestAnimationFrame(move);
+            }
             
-            area.appendChild(bub);
+            b.onclick = () => {
+                if(opt === correct) {
+                    score += 10;
+                    document.getElementById('score').innerText = `XP: ${score}`;
+                    b.style.background = "#00ffcc";
+                    setTimeout(nextQuestion, 500);
+                } else {
+                    b.style.background = "#ff2a2a";
+                    setTimeout(() => b.style.background = "rgba(255,255,255,0.2)", 500);
+                }
+            };
+
+            document.body.appendChild(b);
+            move();
         });
-
-        // Regenerar burbujas si desaparecen y no ha pulsado nada (cada 7 segundos)
-        clearInterval(bubblesInterval);
-        bubblesInterval = setInterval(spawnBubbles, 7000);
     }
 
-    function checkBubble(ans, element) {
-        if(ans === correctAns) {
-            score++;
-            document.getElementById('score').innerText = score;
-            element.style.background = 'var(--bg-bottom)';
-            element.style.color = 'white';
-            element.style.transform = 'scale(1.5)';
-            clearInterval(bubblesInterval);
-            
-            // Efecto de sonido de éxito (sintetizado)
-            let sfx = new SpeechSynthesisUtterance("Great!");
-            sfx.lang = 'en-US';
-            sfx.rate = 1.5;
-            speechSynthesis.speak(sfx);
+    // Fondo de estrellas animado
+    const canvas = document.getElementById('canvas-bg');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
 
-            setTimeout(nextLevel, 1000);
-        } else {
-            element.style.background = '#d63031';
-            element.style.color = 'white';
-            setTimeout(() => element.remove(), 200); // Explota la burbuja incorrecta
+    function animate() {
+        ctx.fillStyle = 'rgba(15, 12, 41, 0.2)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        for(let i=0; i<5; i++) {
+            ctx.fillStyle = 'white';
+            ctx.beginPath();
+            ctx.arc(Math.random()*canvas.width, Math.random()*canvas.height, Math.random()*2, 0, Math.PI*2);
+            ctx.fill();
         }
-    }
-
-    /* Lógica del Acertijo (Boss) */
-    let currentRiddle;
-    function triggerBoss() {
-        clearInterval(bubblesInterval);
-        document.getElementById('gameArea').innerHTML = ''; // Limpiar pantalla
-        
-        const modal = document.getElementById('bossModal');
-        currentRiddle = riddles[Math.floor(Math.random() * riddles.length)];
-        
-        document.getElementById('riddleTextEsp').innerText = currentRiddle.esp;
-        document.getElementById('riddleTextEng').innerText = currentRiddle.eng;
-        document.getElementById('bossAnswer').value = '';
-        
-        modal.style.display = 'flex';
-        
-        let alert = new SpeechSynthesisUtterance("Boss time!");
-        alert.lang = 'en-US';
-        speechSynthesis.speak(alert);
-    }
-
-    function checkBoss() {
-        const val = parseInt(document.getElementById('bossAnswer').value);
-        if(val === currentRiddle.ans) {
-            score++; // Bonus por derrotar al boss
-            document.getElementById('score').innerText = score;
-            document.getElementById('bossModal').style.display = 'none';
-            nextLevel();
-        } else {
-            // Tiembla el input si falla
-            const inp = document.getElementById('bossAnswer');
-            inp.style.borderColor = 'red';
-            setTimeout(() => inp.style.borderColor = 'var(--bg-bottom)', 500);
-        }
+        requestAnimationFrame(animate);
     }
 </script>
-
 </body>
 </html>
