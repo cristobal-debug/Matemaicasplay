@@ -1,273 +1,1011 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Misión Sabiduría: Biblia & English</title>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #6c5ce7;
-            --secondary: #00cec9;
-            --danger: #d63031;
-            --bible-gold: #f1c40f;
-            --dark: #2d3436;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌟 Aprende con Sofía 🌟</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --pink: #FF6BB5;
+    --purple: #9B59FF;
+    --blue: #4ECDC4;
+    --yellow: #FFD93D;
+    --orange: #FF8C42;
+    --green: #6BCB77;
+    --red: #FF4757;
+    --bg: #FFF0F8;
+    --card: #FFFFFF;
+    --text: #3D2C5E;
+    --shadow: 0 8px 32px rgba(155,89,255,0.15);
+  }
 
-        body, html {
-            margin: 0; padding: 0; height: 100%; width: 100%;
-            font-family: 'Fredoka', sans-serif;
-            background: radial-gradient(circle, #2d3436 0%, #000000 100%);
-            color: white; overflow: hidden;
-        }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
-        /* HUD */
-        .hud {
-            position: absolute; top: 0; width: 100%; display: flex;
-            justify-content: space-between; padding: 20px; box-sizing: border-box;
-            background: rgba(0,0,0,0.5); z-index: 100;
-        }
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
 
-        .lives { color: var(--danger); font-size: 1.5rem; text-shadow: 0 0 10px rgba(214, 48, 49, 0.5); }
+  /* ===== ANIMATED BACKGROUND ===== */
+  .bg-bubbles {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none; z-index: 0; overflow: hidden;
+  }
+  .bubble {
+    position: absolute; border-radius: 50%; opacity: 0.12;
+    animation: floatBubble linear infinite;
+  }
+  @keyframes floatBubble {
+    0% { transform: translateY(110vh) scale(0.8); opacity: 0; }
+    10% { opacity: 0.12; }
+    90% { opacity: 0.12; }
+    100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
+  }
 
-        /* Contenedores */
-        .game-screen {
-            height: 100%; display: flex; flex-direction: column;
-            align-items: center; justify-content: center; padding: 20px;
-        }
+  /* ===== WRAPPER ===== */
+  #app {
+    position: relative; z-index: 1;
+    max-width: 800px; margin: 0 auto;
+    padding: 20px 16px 60px;
+  }
 
-        .story-card {
-            background: rgba(255, 255, 255, 0.98);
-            color: #2d3436; padding: 30px; border-radius: 25px;
-            max-width: 550px; width: 90%; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-            text-align: center; display: none; border: 5px solid var(--secondary);
-        }
+  /* ===== HEADER ===== */
+  .header {
+    text-align: center; margin-bottom: 24px;
+  }
+  .header h1 {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(2rem, 6vw, 3.2rem);
+    color: var(--purple);
+    text-shadow: 3px 3px 0 #FFD93D, 5px 5px 0 rgba(155,89,255,0.2);
+    line-height: 1.1;
+  }
+  .header p { color: var(--pink); font-size: 1.1rem; font-weight: 700; margin-top: 4px; }
 
-        .math-display { font-size: 6rem; text-shadow: 0 0 30px var(--primary); display: none; }
+  /* ===== HUD (lives + score + streak) ===== */
+  .hud {
+    display: flex; align-items: center; justify-content: space-between;
+    background: white; border-radius: 20px; padding: 12px 20px;
+    box-shadow: var(--shadow); margin-bottom: 20px;
+    border: 3px solid var(--purple);
+    flex-wrap: wrap; gap: 10px;
+  }
+  .hud-item { display: flex; align-items: center; gap: 6px; }
+  .hud-label { font-size: .75rem; font-weight: 800; color: #888; text-transform: uppercase; letter-spacing: 1px; }
+  .hud-val { font-family: 'Fredoka One', cursive; font-size: 1.5rem; color: var(--text); }
+  .lives-icons { display: flex; gap: 3px; }
+  .heart { font-size: 1.6rem; transition: transform .3s; }
+  .heart.lost { filter: grayscale(1) opacity(.3); transform: scale(.8); }
+  .streak-fire { font-size: 1.6rem; animation: pulse 1s infinite; }
+  @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.15)} }
 
-        /* Burbujas */
-        .bubble {
-            position: absolute; width: 95px; height: 95px;
-            background: radial-gradient(circle at 30% 30%, #ffffff, var(--secondary));
-            border-radius: 50%; display: flex; justify-content: center;
-            align-items: center; font-size: 2.2rem; color: var(--dark);
-            font-weight: bold; cursor: pointer; z-index: 50;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
-        }
+  /* ===== SUBJECT TABS ===== */
+  .tabs {
+    display: flex; gap: 10px; margin-bottom: 22px; flex-wrap: wrap; justify-content: center;
+  }
+  .tab {
+    padding: 10px 22px; border-radius: 50px; border: none; cursor: pointer;
+    font-family: 'Fredoka One', cursive; font-size: 1.05rem;
+    transition: all .25s; position: relative; overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,.12);
+  }
+  .tab::after {
+    content: ''; position: absolute; inset: 0;
+    background: rgba(255,255,255,.3); opacity: 0; transition: opacity .2s;
+  }
+  .tab:hover::after { opacity: 1; }
+  .tab.active { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,.2); }
+  .tab-math  { background: linear-gradient(135deg,#FF6BB5,#FF8C42); color: white; }
+  .tab-en    { background: linear-gradient(135deg,#4ECDC4,#45B7D1); color: white; }
+  .tab-bible { background: linear-gradient(135deg,#FFD93D,#FF8C42); color: white; }
+  .tab-times { background: linear-gradient(135deg,#9B59FF,#6C3BE3); color: white; }
 
-        /* Opciones */
-        .options-grid {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px;
-        }
+  /* ===== QUESTION CARD ===== */
+  .q-card {
+    background: white; border-radius: 28px; padding: 32px 28px;
+    box-shadow: var(--shadow); border: 3px solid transparent;
+    background-clip: padding-box;
+    position: relative; overflow: hidden;
+    animation: slideIn .4s cubic-bezier(.34,1.56,.64,1);
+  }
+  @keyframes slideIn {
+    from { opacity:0; transform:translateY(30px) scale(.95); }
+    to   { opacity:1; transform:translateY(0) scale(1); }
+  }
+  .q-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 6px;
+    background: linear-gradient(90deg, var(--pink), var(--purple), var(--blue));
+  }
+  .q-badge {
+    display: inline-block; padding: 4px 14px; border-radius: 50px;
+    font-size: .8rem; font-weight: 800; margin-bottom: 16px; text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .badge-math  { background: #FFE5F2; color: var(--pink); }
+  .badge-en    { background: #E5FAFB; color: #00969E; }
+  .badge-bible { background: #FFF8DC; color: #B8860B; }
+  .badge-times { background: #F0E8FF; color: var(--purple); }
 
-        .opt-btn {
-            background: var(--dark); color: white; border: none;
-            padding: 15px; border-radius: 15px; font-size: 1.1rem;
-            cursor: pointer; transition: 0.2s;
-        }
+  .q-text {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(1.4rem, 4vw, 2rem);
+    color: var(--text);
+    line-height: 1.35;
+    margin-bottom: 28px;
+    text-align: center;
+  }
+  .q-emoji { font-size: 2.5rem; display: block; margin-bottom: 10px; text-align: center; }
 
-        .opt-btn:hover { background: var(--primary); }
+  /* ===== ANSWERS GRID ===== */
+  .answers {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 14px; margin-bottom: 24px;
+  }
+  .ans-btn {
+    padding: 18px 12px; border-radius: 18px; border: 3px solid #E8D5FF;
+    background: white; font-family: 'Nunito', sans-serif;
+    font-size: 1.05rem; font-weight: 800; color: var(--text);
+    cursor: pointer; transition: all .2s; text-align: center;
+    position: relative; overflow: hidden;
+  }
+  .ans-btn:hover:not(:disabled) {
+    border-color: var(--purple); background: #F5EEFF;
+    transform: translateY(-3px); box-shadow: 0 6px 20px rgba(155,89,255,.2);
+  }
+  .ans-btn.correct {
+    background: linear-gradient(135deg, #6BCB77, #4CAF50); color: white;
+    border-color: #4CAF50; transform: scale(1.05);
+    animation: correctBounce .5s cubic-bezier(.34,1.56,.64,1);
+  }
+  .ans-btn.wrong {
+    background: linear-gradient(135deg, #FF4757, #FF6B6B); color: white;
+    border-color: #FF4757; animation: shake .4s;
+  }
+  @keyframes correctBounce { 0%{transform:scale(1)} 50%{transform:scale(1.12)} 100%{transform:scale(1.05)} }
+  @keyframes shake {
+    0%,100%{transform:translateX(0)} 25%{transform:translateX(-8px)} 75%{transform:translateX(8px)}
+  }
+  .ans-btn:disabled { cursor: default; }
 
-        /* Alerta Papá */
-        .modal {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95); display: none;
-            flex-direction: column; align-items: center; justify-content: center;
-            z-index: 1000; text-align: center;
-        }
+  /* INPUT MODE */
+  .input-row {
+    display: flex; gap: 12px; align-items: center; justify-content: center;
+    margin-bottom: 24px;
+  }
+  .q-input {
+    width: 160px; padding: 14px 20px; border-radius: 16px;
+    border: 3px solid #E8D5FF; font-family: 'Fredoka One', cursive;
+    font-size: 1.8rem; text-align: center; color: var(--text);
+    outline: none; transition: border .2s;
+  }
+  .q-input:focus { border-color: var(--purple); }
+  .submit-btn {
+    padding: 14px 28px; background: linear-gradient(135deg,#9B59FF,#6C3BE3);
+    color: white; border: none; border-radius: 16px; font-family: 'Fredoka One', cursive;
+    font-size: 1.2rem; cursor: pointer; transition: all .2s;
+    box-shadow: 0 4px 16px rgba(155,89,255,.4);
+  }
+  .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(155,89,255,.5); }
 
-        .modal-box {
-            background: white; color: var(--dark); padding: 40px;
-            border-radius: 30px; border: 10px solid var(--danger); width: 80%;
-        }
+  /* FEEDBACK */
+  .feedback {
+    text-align: center; font-family: 'Fredoka One', cursive;
+    font-size: 1.4rem; padding: 12px; border-radius: 14px;
+    margin-bottom: 20px; display: none;
+    animation: popIn .4s cubic-bezier(.34,1.56,.64,1);
+  }
+  @keyframes popIn { from{transform:scale(0)} to{transform:scale(1)} }
+  .feedback.show { display: block; }
+  .feedback.good { background: #E8FFF0; color: #2E7D32; }
+  .feedback.bad  { background: #FFE8E8; color: #C62828; }
 
-        #start-btn {
-            padding: 20px 60px; font-size: 2.5rem; border-radius: 50px;
-            background: var(--secondary); border: none; color: white; cursor: pointer;
-            box-shadow: 0 0 30px var(--secondary);
-        }
-    </style>
+  .next-btn {
+    display: block; width: 100%; padding: 16px;
+    background: linear-gradient(135deg,#FF6BB5,#FF8C42);
+    color: white; border: none; border-radius: 18px;
+    font-family: 'Fredoka One', cursive; font-size: 1.3rem;
+    cursor: pointer; box-shadow: 0 6px 20px rgba(255,107,181,.4);
+    transition: all .2s; display: none;
+  }
+  .next-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(255,107,181,.5); }
+  .next-btn.show { display: block; animation: popIn .4s cubic-bezier(.34,1.56,.64,1); }
+
+  /* ===== MULTIPLICATION TABLE DISPLAY ===== */
+  .times-table-display {
+    background: linear-gradient(135deg, #F0E8FF, #E8F5FF);
+    border-radius: 20px; padding: 20px; margin-bottom: 24px;
+    text-align: center;
+  }
+  .times-table-display h3 {
+    font-family: 'Fredoka One', cursive; color: var(--purple);
+    font-size: 1.6rem; margin-bottom: 14px;
+  }
+  .times-rows { display: flex; flex-direction: column; gap: 6px; }
+  .times-row {
+    background: white; border-radius: 12px; padding: 10px 16px;
+    font-family: 'Fredoka One', cursive; font-size: 1.15rem;
+    color: var(--text); display: flex; justify-content: space-between;
+    border-left: 5px solid var(--purple); transition: all .2s;
+  }
+  .times-row:hover { transform: translateX(4px); border-left-color: var(--pink); }
+  .times-row .result { color: var(--pink); }
+
+  /* ===== TABLE SELECTOR ===== */
+  .table-selector {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    justify-content: center; margin-bottom: 20px;
+  }
+  .tbl-btn {
+    width: 50px; height: 50px; border-radius: 14px;
+    border: 3px solid #E8D5FF; background: white;
+    font-family: 'Fredoka One', cursive; font-size: 1.2rem;
+    color: var(--text); cursor: pointer; transition: all .2s;
+  }
+  .tbl-btn:hover, .tbl-btn.active {
+    background: linear-gradient(135deg,#9B59FF,#6C3BE3);
+    color: white; border-color: var(--purple); transform: scale(1.1);
+  }
+
+  /* ===== PROGRESS BAR ===== */
+  .progress-wrap { margin-bottom: 22px; }
+  .progress-label {
+    display: flex; justify-content: space-between;
+    font-size: .85rem; font-weight: 800; color: #888; margin-bottom: 6px;
+  }
+  .progress-bar {
+    height: 12px; background: #F0E8FF; border-radius: 50px; overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%; border-radius: 50px;
+    background: linear-gradient(90deg, var(--pink), var(--purple));
+    transition: width .5s cubic-bezier(.34,1.56,.64,1);
+    position: relative; overflow: hidden;
+  }
+  .progress-fill::after {
+    content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,.4), transparent);
+    animation: shimmer 2s infinite;
+  }
+  @keyframes shimmer { to { left: 100%; } }
+
+  /* ===== GAME OVER SCREEN ===== */
+  .overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(61,44,94,.85); backdrop-filter: blur(6px);
+    z-index: 100; align-items: center; justify-content: center; padding: 20px;
+  }
+  .overlay.show { display: flex; }
+  .modal {
+    background: white; border-radius: 32px; padding: 40px 32px;
+    max-width: 420px; width: 100%; text-align: center;
+    animation: popIn .5s cubic-bezier(.34,1.56,.64,1);
+    box-shadow: 0 30px 80px rgba(0,0,0,.3);
+  }
+  .modal h2 {
+    font-family: 'Fredoka One', cursive; font-size: 2.2rem;
+    color: var(--purple); margin-bottom: 12px;
+  }
+  .modal p { color: #666; font-size: 1rem; margin-bottom: 20px; line-height: 1.6; }
+  .modal-emoji { font-size: 4rem; display: block; margin-bottom: 16px; }
+  .pin-inputs { display: flex; gap: 10px; justify-content: center; margin-bottom: 20px; }
+  .pin-digit {
+    width: 56px; height: 64px; border: 3px solid #E8D5FF; border-radius: 16px;
+    font-family: 'Fredoka One', cursive; font-size: 2rem; text-align: center;
+    color: var(--text); outline: none; transition: border .2s;
+  }
+  .pin-digit:focus { border-color: var(--purple); }
+  .pin-error { color: var(--red); font-weight: 800; font-size: .95rem; margin-bottom: 12px; min-height: 22px; }
+  .modal-btn {
+    width: 100%; padding: 16px; border-radius: 18px; border: none;
+    font-family: 'Fredoka One', cursive; font-size: 1.3rem;
+    cursor: pointer; margin-bottom: 10px; transition: all .2s;
+  }
+  .btn-continue {
+    background: linear-gradient(135deg,#9B59FF,#6C3BE3); color: white;
+    box-shadow: 0 6px 20px rgba(155,89,255,.4);
+  }
+  .btn-continue:hover { transform: translateY(-2px); }
+  .btn-restart {
+    background: linear-gradient(135deg,#4ECDC4,#45B7D1); color: white;
+    box-shadow: 0 6px 20px rgba(78,205,196,.4);
+  }
+
+  /* ===== CELEBRATION ===== */
+  .confetti-container {
+    position: fixed; inset: 0; pointer-events: none; z-index: 200; overflow: hidden;
+  }
+  .confetti-piece {
+    position: absolute; width: 12px; height: 12px;
+    top: -20px; border-radius: 3px;
+    animation: confettiFall linear forwards;
+  }
+  @keyframes confettiFall {
+    to { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+  }
+
+  /* ===== LEVEL UP ===== */
+  .level-toast {
+    position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px);
+    background: linear-gradient(135deg,#FFD93D,#FF8C42); color: white;
+    padding: 14px 32px; border-radius: 50px; z-index: 300;
+    font-family: 'Fredoka One', cursive; font-size: 1.3rem;
+    box-shadow: 0 8px 30px rgba(255,140,66,.5);
+    transition: transform .5s cubic-bezier(.34,1.56,.64,1);
+  }
+  .level-toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* ===== RESPONSIVE ===== */
+  @media(max-width:480px){
+    .q-text { font-size: 1.3rem; }
+    .answers { grid-template-columns: 1fr 1fr; gap: 10px; }
+    .ans-btn { padding: 14px 8px; font-size: .95rem; }
+    .hud { padding: 10px 14px; }
+  }
+
+  /* ===== ENGLISH SECTION ===== */
+  .word-display {
+    background: linear-gradient(135deg,#E5FAFB,#E8F0FF);
+    border-radius: 20px; padding: 20px; text-align: center; margin-bottom: 20px;
+  }
+  .word-en { font-family:'Fredoka One',cursive; font-size:2.5rem; color:#00969E; }
+  .word-hint { font-size:.95rem; color:#888; margin-top:6px; font-weight:700; }
+  .word-image { font-size:3.5rem; display:block; margin: 8px 0; }
+
+  /* ===== SCROLL/LEVEL INDICATOR ===== */
+  .level-bar {
+    display: flex; align-items: center; justify-content: center;
+    gap: 8px; margin-bottom: 16px; flex-wrap: wrap;
+  }
+  .level-star {
+    font-size: 1.4rem;
+    filter: grayscale(1) opacity(.3);
+    transition: all .3s;
+  }
+  .level-star.earned { filter: none; animation: starPop .5s cubic-bezier(.34,1.56,.64,1); }
+  @keyframes starPop { 0%{transform:scale(0)} 50%{transform:scale(1.4)} 100%{transform:scale(1)} }
+  .level-text {
+    font-family:'Fredoka One',cursive; color:var(--purple); font-size:1rem;
+  }
+</style>
 </head>
 <body>
 
-<div id="start-screen" style="position:fixed; inset:0; background:var(--dark); z-index:2000; display:flex; flex-direction:column; align-items:center; justify-content:center;">
-    <h1 style="color:var(--secondary); font-size:3rem;">🌟 MISIÓN INTELIGENTE 🌟</h1>
-    <button id="start-btn" onclick="start()">INICIAR</button>
-</div>
+<!-- Animated bubbles background -->
+<div class="bg-bubbles" id="bubbles"></div>
 
-<div class="hud">
-    <div style="font-size: 1.5rem;">XP: <span id="xp">0</span></div>
-    <div class="lives" id="hp">❤️❤️❤️</div>
-</div>
+<!-- Level-up toast -->
+<div class="level-toast" id="levelToast">🌟 ¡Subiste de nivel! 🌟</div>
 
-<div class="game-screen">
-    <div id="math-val" class="math-display"></div>
+<!-- Confetti container -->
+<div class="confetti-container" id="confettiContainer"></div>
 
-    <div id="story-val" class="story-card">
-        <h2 id="story-cat" style="margin-top:0; color:var(--primary);"></h2>
-        <div id="story-content" style="font-size: 1.1rem; line-height: 1.5; margin-bottom: 15px; text-align: left; padding: 10px; border-left: 5px solid var(--secondary); background: #f9f9f9;"></div>
-        <p id="story-q" style="font-weight: bold; font-size: 1.2rem;"></p>
-        <div class="options-grid" id="options"></div>
+<!-- GAME OVER / PARENT LOCK overlay -->
+<div class="overlay" id="gameOverOverlay">
+  <div class="modal">
+    <span class="modal-emoji" id="modalEmoji">😢</span>
+    <h2 id="modalTitle">¡Se acabaron las vidas!</h2>
+    <p id="modalMsg">¡Sigue practicando y lo lograrás! Para continuar, un adulto debe ingresar la clave.</p>
+    <div class="pin-inputs">
+      <input class="pin-digit" type="password" maxlength="1" inputmode="numeric" id="p0">
+      <input class="pin-digit" type="password" maxlength="1" inputmode="numeric" id="p1">
+      <input class="pin-digit" type="password" maxlength="1" inputmode="numeric" id="p2">
+      <input class="pin-digit" type="password" maxlength="1" inputmode="numeric" id="p3">
     </div>
+    <div class="pin-error" id="pinError"></div>
+    <button class="modal-btn btn-continue" onclick="checkPin()">🔓 Verificar Clave</button>
+    <button class="modal-btn btn-restart" onclick="restartGame()">🔄 Empezar de Nuevo</button>
+  </div>
 </div>
 
-<div class="modal" id="papa-modal">
-    <div class="modal-box">
-        <h1 style="color: var(--danger);">🛑 ¡ALTO AHÍ!</h1>
-        <p style="font-size: 1.5rem;"><b>Tu papá está viendo tu progreso.</b><br>Por este error, te pondrá una <span style="font-size: 2.5rem;">X</span> en la nevera.</p>
-        <button onclick="closeModal()" style="background:var(--dark); color:white; padding:15px 40px; border-radius:10px; border:none; font-size:1.2rem; cursor:pointer;">ACEPTO Y MEJORARÉ</button>
+<!-- PERFECT SCORE overlay -->
+<div class="overlay" id="winOverlay">
+  <div class="modal">
+    <span class="modal-emoji">🏆</span>
+    <h2>¡Eres increíble! 🌟</h2>
+    <p>Completaste todas las preguntas con <span id="finalScore"></span> puntos.<br>¡Dios te hizo muy inteligente! 🙏</p>
+    <button class="modal-btn btn-continue" onclick="restartGame()">🎉 ¡Jugar Otra Vez!</button>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="app">
+  <div class="header">
+    <h1>🌟 Aprende con Sofía 🌟</h1>
+    <p>¡Matemáticas, Inglés y Biblia!</p>
+  </div>
+
+  <!-- HUD -->
+  <div class="hud">
+    <div class="hud-item">
+      <div>
+        <div class="hud-label">Vidas</div>
+        <div class="lives-icons" id="livesDisplay"></div>
+      </div>
     </div>
+    <div class="hud-item">
+      <div>
+        <div class="hud-label">Puntos</div>
+        <div class="hud-val" id="scoreDisplay">0</div>
+      </div>
+    </div>
+    <div class="hud-item">
+      <div>
+        <div class="hud-label">Racha</div>
+        <div class="hud-val" id="streakDisplay"><span class="streak-fire">🔥</span> 0</div>
+      </div>
+    </div>
+    <div class="hud-item">
+      <div>
+        <div class="hud-label">Nivel</div>
+        <div class="hud-val" id="levelDisplay">1</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STARS / LEVEL -->
+  <div class="level-bar" id="levelStars"></div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab tab-times active" onclick="setSubject('times')">🔢 Tablas</button>
+    <button class="tab tab-math"  onclick="setSubject('math')">➕ Mates</button>
+    <button class="tab tab-en"    onclick="setSubject('en')">🇺🇸 Inglés</button>
+    <button class="tab tab-bible" onclick="setSubject('bible')">✝️ Biblia</button>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress-wrap">
+    <div class="progress-label">
+      <span id="progressText">Pregunta 1 de 10</span>
+      <span id="progressPct">0%</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+  </div>
+
+  <!-- QUESTION CARD -->
+  <div class="q-card" id="qCard">
+    <!-- Times Table Selector (only for times tab) -->
+    <div id="timesSection" style="display:none">
+      <div class="times-table-display">
+        <h3 id="timesTableTitle">Tabla del <span id="currentTableNum">2</span></h3>
+        <div class="times-rows" id="timesRows"></div>
+      </div>
+      <div class="table-selector" id="tableSelector"></div>
+      <p style="text-align:center;font-weight:800;color:var(--purple);margin-bottom:16px;">¡Ahora responde la pregunta! 👇</p>
+    </div>
+
+    <span class="q-badge" id="qBadge">Matemáticas</span>
+    <span class="q-emoji" id="qEmoji">🔢</span>
+    <div class="q-text" id="qText">Cargando...</div>
+
+    <!-- Multiple choice -->
+    <div class="answers" id="answersDiv"></div>
+
+    <!-- Input mode -->
+    <div class="input-row" id="inputRow" style="display:none">
+      <input class="q-input" type="number" id="qInput" placeholder="?" />
+      <button class="submit-btn" onclick="submitInput()">✓</button>
+    </div>
+
+    <!-- Feedback -->
+    <div class="feedback" id="feedbackDiv"></div>
+
+    <!-- Next -->
+    <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Siguiente pregunta ➡️</button>
+  </div>
 </div>
 
 <script>
-    let xp = 0;
-    let lives = 3;
-    let correct = "";
+// =========================================================
+// DATA BANKS
+// =========================================================
+const MATH_QUESTIONS = [
+  // Word problems & arithmetic
+  { q:"🍎 Sofía tiene 8 manzanas y le dan 7 más. ¿Cuántas tiene en total?", a:15, choices:[13,14,15,16], emoji:"🍎" },
+  { q:"🚌 Hay 24 niños en el bus. Bajan 9. ¿Cuántos quedan?", a:15, choices:[13,14,15,16], emoji:"🚌" },
+  { q:"🍕 Una pizza tiene 8 porciones. ¿Cuántas porciones hay en 3 pizzas?", a:24, choices:[20,22,24,26], emoji:"🍕" },
+  { q:"🎂 María repartió su pastel en 4 partes iguales. Si hay 2 pasteles, ¿cuántas porciones hay?", a:8, choices:[6,7,8,9], emoji:"🎂" },
+  { q:"💰 Tienes 50 monedas y gastas 23. ¿Cuántas te quedan?", a:27, choices:[25,26,27,28], emoji:"💰" },
+  { q:"🌸 Hay 6 floreros y en cada uno hay 5 flores. ¿Cuántas flores hay?", a:30, choices:[28,30,32,35], emoji:"🌸" },
+  { q:"📚 Cada estante tiene 9 libros. ¿Cuántos libros hay en 4 estantes?", a:36, choices:[32,34,36,38], emoji:"📚" },
+  { q:"🐥 Una gallina pone 7 huevos por semana. ¿Cuántos pone en 3 semanas?", a:21, choices:[18,20,21,24], emoji:"🐥" },
+  { q:"🍬 Ana tiene 45 dulces y regala 18. ¿Cuántos le quedan?", a:27, choices:[25,27,29,31], emoji:"🍬" },
+  { q:"⭐ ¿Cuánto es 63 ÷ 7?", a:9, choices:[7,8,9,10], emoji:"⭐" },
+  { q:"🚗 Un carro recorre 6 km en cada vuelta. ¿Cuántos km en 8 vueltas?", a:48, choices:[42,45,48,54], emoji:"🚗" },
+  { q:"🎯 ¿Cuánto es 72 ÷ 8?", a:9, choices:[7,8,9,10], emoji:"🎯" },
+  { q:"🌈 Hay 56 crayones en 7 cajas iguales. ¿Cuántos hay en cada caja?", a:8, choices:[6,7,8,9], emoji:"🌈" },
+  { q:"🏃 Si corres 5 vueltas por día, ¿cuántas vueltas en 9 días?", a:45, choices:[40,42,45,50], emoji:"🏃" },
+  { q:"🧁 Horneas 4 bandejas de 6 muffins. ¿Cuántos muffins tienes?", a:24, choices:[20,22,24,26], emoji:"🧁" },
+  { q:"🐠 Hay 3 peceras con 9 peces cada una. ¿Cuántos peces en total?", a:27, choices:[24,25,27,30], emoji:"🐠" },
+  { q:"🎀 ¿Cuánto es 100 − 37?", a:63, choices:[53,63,73,83], emoji:"🎀" },
+  { q:"🦋 ¿Cuánto es 9 × 9?", a:81, choices:[72,81,90,99], emoji:"🦋" },
+  { q:"⚽ Hay 5 equipos con 7 jugadores cada uno. ¿Cuántos jugadores en total?", a:35, choices:[30,33,35,40], emoji:"⚽" },
+  { q:"🍦 Una heladería vende 10 sabores. Si cada sabor cuesta $3, ¿cuánto cuestan 4 helados?", a:12, choices:[10,12,14,16], emoji:"🍦" },
+];
 
-    // --- BASE DE DATOS DE HISTORIAS BÍBLICAS ---
-    const bibleDB = [
-        {
-            story: "David era un joven pastor que confiaba en Dios. Cuando el gigante Goliat amenazó a su pueblo, David no usó espada, sino una honda y cinco piedras lisas del arroyo. Con un solo tiro, derribó al gigante.",
-            q: "¿Qué usó David para vencer a Goliat en lugar de una espada?",
-            a: "Una honda y piedras",
-            opts: ["Un arco y flecha", "Una honda y piedras", "Una lanza mágica", "Un escudo grande"]
-        },
-        {
-            story: "Daniel amaba a Dios y oraba tres veces al día. Por su fe, fue lanzado a un foso lleno de leones hambrientos. Pero Dios envió un ángel que cerró la boca de los leones y Daniel salió sin un rasguño.",
-            q: "¿Qué hizo Dios para salvar a Daniel en el foso?",
-            a: "Envió un ángel",
-            opts: ["Envió un ángel", "Hizo dormir a Daniel", "Le dio una espada", "Abrió una puerta secreta"]
-        },
-        {
-            story: "La reina Ester fue muy valiente. Ella arriesgó su vida hablando con el Rey para salvar a su pueblo de un plan malvado. Antes de hacerlo, pidió a todos que ayunaran y oraran durante tres días.",
-            q: "¿Por cuánto tiempo pidió Ester que ayunaran antes de ir ante el rey?",
-            a: "3 días",
-            opts: ["1 día", "3 días", "1 semana", "40 días"]
-        }
-    ];
+const TIMES_QUESTIONS = []; // generated dynamically
 
-    // --- BASE DE DATOS DE INGLÉS (NIVEL MÁS DIFÍCIL) ---
-    const englishDB = [
-        {
-            story: "English Challenge: Grammar & Verbs",
-            q: "Which sentence is correct? (¿Cuál es correcta?)",
-            a: "She plays the piano",
-            opts: ["She play the piano", "She plays the piano", "She playing piano", "She are play piano"]
-        },
-        {
-            story: "English Challenge: Daily Life",
-            q: "How do you ask for water politely? (¿Cómo pides agua educadamente?)",
-            a: "Can I have some water, please?",
-            opts: ["Give me water", "I want water now", "Can I have some water, please?", "Water is good"]
-        },
-        {
-            story: "English Challenge: Opposite Words",
-            q: "What is the opposite of 'Strong'? (¿Qué es lo opuesto a Fuerte?)",
-            a: "Weak",
-            opts: ["Big", "Fast", "Weak", "Small"]
-        }
-    ];
+const ENGLISH_QUESTIONS = [
+  // Vocabulary
+  { q:"🌟 ¿Cómo se dice 'MANZANA' en inglés?", a:"Apple", choices:["Orange","Apple","Grape","Banana"], emoji:"🍎", hint:"Comienza con A..." },
+  { q:"🌟 ¿Cómo se dice 'PERRO' en inglés?", a:"Dog", choices:["Cat","Dog","Bird","Fish"], emoji:"🐶", hint:"Comienza con D..." },
+  { q:"🌟 ¿Cómo se dice 'CASA' en inglés?", a:"House", choices:["School","House","Car","Tree"], emoji:"🏠", hint:"Comienza con H..." },
+  { q:"🌟 ¿Cómo se dice 'GATO' en inglés?", a:"Cat", choices:["Cat","Cow","Hen","Pig"], emoji:"🐱", hint:"Comienza con C..." },
+  { q:"🌟 ¿Cómo se dice 'LIBRO' en inglés?", a:"Book", choices:["Bag","Pen","Book","Desk"], emoji:"📚", hint:"Comienza con B..." },
+  { q:"🌟 ¿Cómo se dice 'AGUA' en inglés?", a:"Water", choices:["Juice","Milk","Water","Soda"], emoji:"💧", hint:"Comienza con W..." },
+  { q:"🌟 ¿Cómo se dice 'SOL' en inglés?", a:"Sun", choices:["Moon","Star","Sun","Sky"], emoji:"☀️", hint:"Comienza con S..." },
+  { q:"🌟 ¿Cómo se dice 'ROJO' en inglés?", a:"Red", choices:["Blue","Red","Green","Pink"], emoji:"🔴", hint:"Comienza con R..." },
+  { q:"🌟 ¿Cómo se dice 'FLOR' en inglés?", a:"Flower", choices:["Tree","Leaf","Flower","Grass"], emoji:"🌸", hint:"Comienza con F..." },
+  { q:"🌟 ¿Cómo se dice 'LUNA' en inglés?", a:"Moon", choices:["Star","Moon","Sky","Cloud"], emoji:"🌙", hint:"Comienza con M..." },
+  // Numbers in English
+  { q:"🔢 ¿Cómo se escribe el número 7 en inglés?", a:"Seven", choices:["Five","Six","Seven","Eight"], emoji:"7️⃣", hint:"Se-ven..." },
+  { q:"🔢 ¿Cómo se escribe el número 12 en inglés?", a:"Twelve", choices:["Ten","Eleven","Twelve","Thirteen"], emoji:"🔢", hint:"Twel-ve..." },
+  { q:"🔢 ¿Cómo se escribe el número 20 en inglés?", a:"Twenty", choices:["Twelve","Twenty","Thirty","Forty"], emoji:"2️⃣0️⃣", hint:"Twen-ty..." },
+  // Colors
+  { q:"🎨 ¿Qué color es 'BLUE' en español?", a:"Azul", choices:["Verde","Azul","Rojo","Amarillo"], emoji:"💙", hint:"El color del cielo..." },
+  { q:"🎨 ¿Qué color es 'GREEN'?", a:"Verde", choices:["Verde","Azul","Rosa","Morado"], emoji:"💚", hint:"El color del pasto..." },
+  // Simple sentences
+  { q:"📝 ¿Qué significa 'I love God'?", a:"Yo amo a Dios", choices:["Yo temo a Dios","Yo amo a Dios","Dios me ama","Yo creo en Dios"], emoji:"❤️", hint:"I = Yo, love = amar..." },
+  { q:"📝 ¿Qué significa 'Good morning'?", a:"Buenos días", choices:["Buenas noches","Buenas tardes","Buenos días","Hola"], emoji:"🌞", hint:"Good = Bueno, morning = mañana..." },
+  { q:"📝 ¿Qué significa 'Thank you'?", a:"Gracias", choices:["Por favor","De nada","Gracias","Perdón"], emoji:"🙏", hint:"Es una expresión de gratitud..." },
+  { q:"📝 ¿Cómo se dice 'MARIPOSA' en inglés?", a:"Butterfly", choices:["Dragonfly","Firefly","Butterfly","Hummingbird"], emoji:"🦋", hint:"Butter-fly..." },
+  { q:"📝 ¿Cómo se dice 'ESTRELLA' en inglés?", a:"Star", choices:["Star","Moon","Sun","Sky"], emoji:"⭐", hint:"Comienza con St..." },
+];
 
-    const engNums = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve"];
+const BIBLE_QUESTIONS = [
+  { q:"✝️ ¿Cómo se llama el libro más importante para los cristianos?", a:"La Biblia", choices:["El Corán","La Biblia","La Torá","El Talmud"], emoji:"📖" },
+  { q:"🌊 ¿Quién separó el Mar Rojo para que el pueblo de Israel pudiera cruzar?", a:"Moisés", choices:["Abraham","David","Moisés","Pablo"], emoji:"🌊" },
+  { q:"🐑 ¿Quién era el pastor que mató al gigante Goliat con una honda?", a:"David", choices:["Saúl","Sansón","David","Josué"], emoji:"🐑" },
+  { q:"🏠 ¿En qué ciudad nació Jesús?", a:"Belén", choices:["Nazaret","Jerusalén","Belén","Jericó"], emoji:"⭐" },
+  { q:"🌈 ¿Qué prometió Dios con el arcoíris después del diluvio?", a:"No volvería a destruir la tierra con agua", choices:["Dar lluvia siempre","Crear colores en el cielo","No volvería a destruir la tierra con agua","Hacer paz entre los animales"], emoji:"🌈" },
+  { q:"🦁 ¿Quién fue metido en el foso de los leones y Dios lo protegió?", a:"Daniel", choices:["Elías","Daniel","Jonás","Pedro"], emoji:"🦁" },
+  { q:"🐳 ¿A qué profeta se tragó un gran pez?", a:"Jonás", choices:["Moisés","Elías","Jonás","Isaías"], emoji:"🐳" },
+  { q:"❤️ ¿Cuál es el mandamiento más importante según Jesús?", a:"Amar a Dios con todo tu corazón", choices:["No mentir","No robar","Amar a Dios con todo tu corazón","Ir a la iglesia"], emoji:"❤️" },
+  { q:"🌟 ¿Cómo se llaman los 12 seguidores más cercanos de Jesús?", a:"Los 12 Apóstoles", choices:["Los 12 Profetas","Los 12 Apóstoles","Los 12 Sacerdotes","Los 12 Ángeles"], emoji:"🌟" },
+  { q:"🍎 ¿En qué jardín vivían Adán y Eva?", a:"El Jardín del Edén", choices:["El Jardín de Getsemaní","El Monte Sinaí","El Jardín del Edén","El Valle de Josafat"], emoji:"🍃" },
+  { q:"🕊️ ¿Qué animal representa la paz en la Biblia?", a:"La paloma", choices:["El águila","El cordero","La paloma","El pez"], emoji:"🕊️" },
+  { q:"📜 ¿Cuántos libros tiene la Biblia (versión protestante)?", a:"66", choices:["39","73","66","27"], emoji:"📜" },
+  { q:"🌟 ¿Quién escribió la mayoría de los Salmos?", a:"David", choices:["Salomón","David","Moisés","Pablo"], emoji:"🎵" },
+  { q:"⭐ ¿Cómo se llama el versículo más famoso de la Biblia? (Juan 3:...)", a:"16", choices:["14","15","16","17"], emoji:"⭐" },
+  { q:"🙏 ¿Cómo se llama la oración que Jesús enseñó a sus discípulos?", a:"El Padrenuestro", choices:["El Ave María","El Padrenuestro","Los Salmos","El Credo"], emoji:"🙏" },
+  { q:"🌿 ¿Con qué multiplico Jesús los panes y peces para dar de comer a la multitud?", a:"5 panes y 2 peces", choices:["10 panes y 5 peces","3 panes y 3 peces","5 panes y 2 peces","7 panes y 4 peces"], emoji:"🍞" },
+  { q:"🏔️ ¿En qué monte Dios le dio los 10 Mandamientos a Moisés?", a:"Monte Sinaí", choices:["Monte Horeb","Monte Sión","Monte Sinaí","Monte Tabor"], emoji:"🏔️" },
+  { q:"👑 ¿Quién fue el primer rey de Israel?", a:"Saúl", choices:["David","Saúl","Salomón","Josué"], emoji:"👑" },
+  { q:"🔑 ¿Cuál es el primer libro de la Biblia?", a:"Génesis", choices:["Éxodo","Génesis","Levítico","Salmos"], emoji:"📖" },
+  { q:"✨ ¿Cuántos días tardó Dios en crear el mundo?", a:"6 días", choices:["3 días","5 días","6 días","7 días"], emoji:"🌍" },
+];
 
-    function start() {
-        document.getElementById('start-screen').style.display = 'none';
-        nextRound();
+// Generate times table questions
+function generateTimesQuestions(table) {
+  const qs = [];
+  for(let i=1;i<=10;i++){
+    const ans = table*i;
+    const wrong = [];
+    while(wrong.length<3){
+      const w = ans + (Math.floor(Math.random()*5)+1)*(Math.random()<.5?1:-1);
+      if(w>0 && w!==ans && !wrong.includes(w)) wrong.push(w);
     }
+    const choices = shuffle([ans,...wrong]);
+    qs.push({ q:`${table} × ${i} = ?`, a:ans, choices, emoji:"🔢", table });
+  }
+  return qs;
+}
 
-    function nextRound() {
-        document.getElementById('math-val').style.display = 'none';
-        document.getElementById('story-val').style.display = 'none';
-        document.getElementById('options').innerHTML = '';
-        const bubbles = document.querySelectorAll('.bubble');
-        bubbles.forEach(b => b.remove());
+// =========================================================
+// GAME STATE
+// =========================================================
+let state = {
+  subject: 'times',
+  lives: 5,
+  maxLives: 5,
+  score: 0,
+  streak: 0,
+  level: 1,
+  starsEarned: 0,
+  currentTable: 2,
+  questions: [],
+  qIndex: 0,
+  answered: false,
+  correctInRow: 0,
+};
 
-        let r = Math.random();
-        if(r < 0.4) setupMath();
-        else if(r < 0.7) setupStory(bibleDB, "📖 HISTORIA BÍBLICA");
-        else setupStory(englishDB, "🇬🇧 ADVANCED ENGLISH");
+const CORRECT_MSGS = ["🎉 ¡Excelente!","⭐ ¡Muy bien!","🌟 ¡Perfecto!","🏆 ¡Eres una campeona!","🦋 ¡Increíble!","🎊 ¡Genial!","💖 ¡Dios te hizo muy inteligente!","🌈 ¡Así se hace!","✨ ¡Brillante!","🚀 ¡Wow!"];
+const WRONG_MSGS = ["💪 ¡Casi! Inténtalo de nuevo.","😊 No te rindas, ¡tú puedes!","🙏 ¡Sigue practicando!","💡 ¡La próxima lo logras!","❤️ ¡Dios te da fuerzas!"];
+
+// =========================================================
+// UTILS
+// =========================================================
+function shuffle(arr){ return [...arr].sort(()=>Math.random()-.5); }
+function rand(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
+
+// =========================================================
+// INIT
+// =========================================================
+function init(){
+  createBubbles();
+  buildLevelStars();
+  updateHUD();
+  setSubject('times', true);
+}
+
+function createBubbles(){
+  const c = document.getElementById('bubbles');
+  const colors=['#FF6BB5','#9B59FF','#4ECDC4','#FFD93D','#6BCB77'];
+  for(let i=0;i<18;i++){
+    const d=document.createElement('div');
+    d.className='bubble';
+    const size=rand(30,90);
+    d.style.cssText=`width:${size}px;height:${size}px;left:${rand(0,100)}%;background:${colors[i%colors.length]};animation-duration:${rand(8,18)}s;animation-delay:${rand(0,10)}s;`;
+    c.appendChild(d);
+  }
+}
+
+function buildLevelStars(){
+  const el=document.getElementById('levelStars');
+  el.innerHTML='';
+  for(let i=0;i<10;i++){
+    const s=document.createElement('span');
+    s.className='level-star'+(i<state.starsEarned?' earned':'');
+    s.textContent='⭐';
+    el.appendChild(s);
+  }
+  const t=document.createElement('span');
+  t.className='level-text';
+  t.id='levelStarText';
+  t.textContent=`Nivel ${state.level}`;
+  el.appendChild(t);
+}
+
+// =========================================================
+// SUBJECT SELECT
+// =========================================================
+function setSubject(subj, skipAnim){
+  state.subject = subj;
+  state.qIndex = 0;
+  state.answered = false;
+
+  // Update tabs
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  const map={times:'tab-times',math:'tab-math',en:'tab-en',bible:'tab-bible'};
+  document.querySelector('.'+map[subj]).classList.add('active');
+
+  // Build question pool
+  if(subj==='times'){
+    state.questions = shuffle(generateTimesQuestions(state.currentTable));
+  } else if(subj==='math'){
+    state.questions = shuffle([...MATH_QUESTIONS]);
+  } else if(subj==='en'){
+    state.questions = shuffle([...ENGLISH_QUESTIONS]);
+  } else {
+    state.questions = shuffle([...BIBLE_QUESTIONS]);
+  }
+
+  updateProgress();
+  renderQuestion();
+}
+
+// =========================================================
+// RENDER
+// =========================================================
+function renderQuestion(){
+  const q = state.questions[state.qIndex];
+  if(!q){ showWinScreen(); return; }
+
+  state.answered = false;
+  hideFeedback();
+  document.getElementById('nextBtn').classList.remove('show');
+
+  // Times section visibility
+  const ts=document.getElementById('timesSection');
+  if(state.subject==='times'){
+    ts.style.display='block';
+    renderTimesSection();
+  } else {
+    ts.style.display='none';
+  }
+
+  // Badge
+  const badgeMap={times:'badge-times',math:'badge-math',en:'badge-en',bible:'badge-bible'};
+  const badgeText={times:'Tabla del '+state.currentTable,math:'Matemáticas',en:'Inglés',bible:'Biblia'};
+  const b=document.getElementById('qBadge');
+  b.className='q-badge '+badgeMap[state.subject];
+  b.textContent=badgeText[state.subject];
+
+  document.getElementById('qEmoji').textContent=q.emoji||'❓';
+  document.getElementById('qText').textContent=q.q;
+
+  // Hint for english
+  if(q.hint && state.subject==='en'){
+    document.getElementById('qText').innerHTML=q.q+'<br><small style="color:#888;font-size:.7em;font-weight:700;">Pista: '+q.hint+'</small>';
+  }
+
+  // Choices
+  const aDiv=document.getElementById('answersDiv');
+  const iRow=document.getElementById('inputRow');
+
+  if(q.choices){
+    aDiv.style.display='grid';
+    iRow.style.display='none';
+    aDiv.innerHTML='';
+    q.choices.forEach(c=>{
+      const btn=document.createElement('button');
+      btn.className='ans-btn';
+      btn.textContent=c;
+      btn.onclick=()=>checkAnswer(c, q.a, btn);
+      aDiv.appendChild(btn);
+    });
+  } else {
+    aDiv.style.display='none';
+    iRow.style.display='flex';
+    document.getElementById('qInput').value='';
+    document.getElementById('qInput').focus();
+  }
+
+  // Animate card
+  const card=document.getElementById('qCard');
+  card.style.animation='none';
+  card.offsetHeight;
+  card.style.animation='slideIn .4s cubic-bezier(.34,1.56,.64,1)';
+}
+
+function renderTimesSection(){
+  document.getElementById('currentTableNum').textContent=state.currentTable;
+  const rows=document.getElementById('timesRows');
+  rows.innerHTML='';
+  for(let i=1;i<=10;i++){
+    const r=document.createElement('div');
+    r.className='times-row';
+    r.innerHTML=`<span>${state.currentTable} × ${i}</span> <span>= </span><span class="result">${state.currentTable*i}</span>`;
+    rows.appendChild(r);
+  }
+
+  const sel=document.getElementById('tableSelector');
+  sel.innerHTML='';
+  for(let t=1;t<=10;t++){
+    const b=document.createElement('button');
+    b.className='tbl-btn'+(t===state.currentTable?' active':'');
+    b.textContent=t;
+    b.onclick=()=>changeTable(t);
+    sel.appendChild(b);
+  }
+}
+
+function changeTable(t){
+  state.currentTable=t;
+  state.questions=shuffle(generateTimesQuestions(t));
+  state.qIndex=0;
+  renderTimesSection();
+  renderQuestion();
+  updateProgress();
+}
+
+// =========================================================
+// ANSWER CHECK
+// =========================================================
+function checkAnswer(given, correct, btn){
+  if(state.answered) return;
+  state.answered=true;
+
+  const isRight = String(given)===String(correct);
+
+  // Highlight buttons
+  document.querySelectorAll('.ans-btn').forEach(b=>{
+    b.disabled=true;
+    if(String(b.textContent)===String(correct)) b.classList.add('correct');
+  });
+  if(!isRight && btn) btn.classList.add('wrong');
+
+  processResult(isRight);
+}
+
+function submitInput(){
+  if(state.answered) return;
+  const q=state.questions[state.qIndex];
+  const val=document.getElementById('qInput').value.trim();
+  if(!val) return;
+  state.answered=true;
+  processResult(String(val)===String(q.a));
+}
+
+function processResult(isRight){
+  if(isRight){
+    state.streak++;
+    state.correctInRow++;
+    const bonus=state.streak>=5?20:state.streak>=3?10:0;
+    const pts=10+bonus;
+    state.score+=pts;
+    state.starsEarned=Math.min(10, state.starsEarned+1);
+
+    showFeedback(true, CORRECT_MSGS[rand(0,CORRECT_MSGS.length-1)]+(bonus>0?` +${bonus} bonus!`:''));
+    updateHUD();
+    buildLevelStars();
+
+    // Level up every 5 correct
+    if(state.correctInRow>0 && state.correctInRow%5===0){
+      state.level++;
+      showLevelUp();
     }
+    if(state.score%50===0) triggerConfetti();
 
-    function setupMath() {
-        const mv = document.getElementById('math-val');
-        mv.style.display = 'block';
-        let n1 = Math.floor(Math.random() * 8) + 2;
-        let n2 = Math.floor(Math.random() * 9) + 1;
-        correct = n1 * n2;
-        mv.innerText = `${n1} x ${n2}`;
-        
-        let t = new SpeechSynthesisUtterance(`${engNums[n1]} times ${engNums[n2]}`);
-        t.lang = 'en-US'; window.speechSynthesis.speak(t);
+  } else {
+    state.streak=0;
+    state.lives--;
+    const q=state.questions[state.qIndex];
+    showFeedback(false, WRONG_MSGS[rand(0,WRONG_MSGS.length-1)]+` La respuesta era: ${q.a}`);
+    updateHUD();
+    shakeLives();
 
-        let opts = [correct];
-        while(opts.length < 4) {
-            let f = (Math.floor(Math.random()*9)+2) * (Math.floor(Math.random()*9)+1);
-            if(!opts.includes(f)) opts.push(f);
-        }
-        opts.sort(() => Math.random() - 0.5);
+    if(state.lives<=0){ setTimeout(showGameOver, 700); return; }
+  }
 
-        opts.forEach((v, i) => {
-            const b = document.createElement('div');
-            b.className = 'bubble';
-            b.innerText = v;
-            b.style.left = (15 + (i * 20)) + '%';
-            let pos = 110;
-            let speed = 0.12 + (Math.random() * 0.1); // ULTRA LENTAS
-            function move() {
-                pos -= speed;
-                b.style.top = pos + '%';
-                if(pos < -15) pos = 110;
-                if(b.parentNode) requestAnimationFrame(move);
-            }
-            b.onclick = () => (v === correct) ? win() : fail();
-            document.body.appendChild(b);
-            move();
-        });
-    }
+  document.getElementById('nextBtn').classList.add('show');
+  updateProgress();
+}
 
-    function setupStory(db, title) {
-        const zone = document.getElementById('story-val');
-        zone.style.display = 'block';
-        const item = db[Math.floor(Math.random() * db.length)];
-        
-        document.getElementById('story-cat').innerText = title;
-        document.getElementById('story-content').innerText = item.story;
-        document.getElementById('story-q').innerText = item.q;
-        correct = item.a;
+// =========================================================
+// NAVIGATION
+// =========================================================
+function nextQuestion(){
+  state.qIndex++;
+  if(state.qIndex>=state.questions.length){
+    state.qIndex=0;
+    state.questions=shuffle(state.questions);
+  }
+  renderQuestion();
+  updateProgress();
+}
 
-        item.opts.forEach(o => {
-            const btn = document.createElement('button');
-            btn.className = 'opt-btn';
-            btn.innerText = o;
-            btn.onclick = () => (o === correct) ? win() : fail();
-            document.getElementById('options').appendChild(btn);
-        });
-        if(title.includes("ENGLISH")) {
-            let t = new SpeechSynthesisUtterance(item.q);
-            t.lang = 'en-US'; window.speechSynthesis.speak(t);
-        }
-    }
+// =========================================================
+// HUD & PROGRESS
+// =========================================================
+function updateHUD(){
+  // Lives
+  const lv=document.getElementById('livesDisplay');
+  lv.innerHTML='';
+  for(let i=0;i<state.maxLives;i++){
+    const h=document.createElement('span');
+    h.className='heart'+(i>=state.lives?' lost':'');
+    h.textContent='❤️';
+    lv.appendChild(h);
+  }
+  document.getElementById('scoreDisplay').textContent=state.score;
+  document.getElementById('streakDisplay').innerHTML=`<span class="streak-fire">🔥</span> ${state.streak}`;
+  document.getElementById('levelDisplay').textContent=state.level;
+}
 
-    function win() {
-        xp += 10;
-        document.getElementById('xp').innerText = xp;
-        nextRound();
-    }
+function updateProgress(){
+  const total=Math.min(state.questions.length,10);
+  const done=state.qIndex;
+  const pct=Math.round((done/total)*100);
+  document.getElementById('progressFill').style.width=pct+'%';
+  document.getElementById('progressText').textContent=`Pregunta ${done+1} de ${total}`;
+  document.getElementById('progressPct').textContent=pct+'%';
+}
 
-    function fail() {
-        lives--;
-        document.getElementById('hp').innerText = "❤️".repeat(Math.max(0, lives)) + "🖤".repeat(Math.max(0, 3 - lives));
-        document.getElementById('papa-modal').style.display = 'flex';
-        if(lives <= 0) {
-            alert("Has agotado tus vidas. ¡Es hora de repasar con papá!");
-            location.reload();
-        }
-    }
+// =========================================================
+// FEEDBACK
+// =========================================================
+function showFeedback(good, msg){
+  const d=document.getElementById('feedbackDiv');
+  d.className='feedback show '+(good?'good':'bad');
+  d.textContent=msg;
+}
+function hideFeedback(){
+  document.getElementById('feedbackDiv').className='feedback';
+}
 
-    function closeModal() {
-        document.getElementById('papa-modal').style.display = 'none';
-        nextRound();
-    }
+function shakeLives(){
+  const lv=document.getElementById('livesDisplay');
+  lv.style.animation='shake .4s';
+  setTimeout(()=>lv.style.animation='',400);
+}
+
+// =========================================================
+// GAME OVER & PIN
+// =========================================================
+function showGameOver(){
+  document.getElementById('modalEmoji').textContent='😢';
+  document.getElementById('modalTitle').textContent='¡Se acabaron las vidas!';
+  document.getElementById('modalMsg').textContent='¡Sigue practicando! Para continuar, un adulto debe ingresar la clave secreta.';
+  document.getElementById('pinError').textContent='';
+  ['p0','p1','p2','p3'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('gameOverOverlay').classList.add('show');
+  setTimeout(()=>document.getElementById('p0').focus(),300);
+
+  // Auto-advance pin digits
+  ['p0','p1','p2','p3'].forEach((id,i)=>{
+    const el=document.getElementById(id);
+    el.addEventListener('input',()=>{
+      if(el.value.length===1 && i<3) document.getElementById('p'+String(i+1)).focus();
+    });
+    el.addEventListener('keydown',e=>{
+      if(e.key==='Backspace'&&el.value===''&&i>0) document.getElementById('p'+String(i-1)).focus();
+    });
+  });
+}
+
+function checkPin(){
+  const pin=['p0','p1','p2','p3'].map(id=>document.getElementById(id).value).join('');
+  if(pin==='1819'){
+    document.getElementById('gameOverOverlay').classList.remove('show');
+    state.lives=state.maxLives;
+    updateHUD();
+    document.getElementById('pinError').textContent='';
+  } else {
+    document.getElementById('pinError').textContent='❌ Clave incorrecta. Inténtalo de nuevo.';
+    ['p0','p1','p2','p3'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('p0').focus();
+  }
+}
+
+function showWinScreen(){
+  document.getElementById('finalScore').textContent=state.score;
+  document.getElementById('winOverlay').classList.add('show');
+  triggerConfetti(true);
+}
+
+function restartGame(){
+  document.getElementById('gameOverOverlay').classList.remove('show');
+  document.getElementById('winOverlay').classList.remove('show');
+  state.lives=state.maxLives;
+  state.score=0;
+  state.streak=0;
+  state.level=1;
+  state.starsEarned=0;
+  state.correctInRow=0;
+  updateHUD();
+  buildLevelStars();
+  setSubject(state.subject);
+}
+
+// =========================================================
+// LEVEL UP TOAST
+// =========================================================
+function showLevelUp(){
+  const t=document.getElementById('levelToast');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+// =========================================================
+// CONFETTI
+// =========================================================
+function triggerConfetti(big=false){
+  const c=document.getElementById('confettiContainer');
+  const colors=['#FF6BB5','#9B59FF','#FFD93D','#4ECDC4','#6BCB77','#FF8C42'];
+  const count=big?120:40;
+  for(let i=0;i<count;i++){
+    const p=document.createElement('div');
+    p.className='confetti-piece';
+    p.style.cssText=`left:${rand(0,100)}%;background:${colors[rand(0,colors.length-1)]};animation-duration:${rand(2,4)}s;animation-delay:${rand(0,1500)/1000}s;transform:rotate(${rand(0,360)}deg);border-radius:${rand(0,1)?'50%':'3px'};`;
+    c.appendChild(p);
+    setTimeout(()=>p.remove(),5000);
+  }
+}
+
+// =========================================================
+// KEYBOARD SUPPORT
+// =========================================================
+document.addEventListener('keydown',e=>{
+  if(e.key==='Enter'){
+    const nb=document.getElementById('nextBtn');
+    if(nb.classList.contains('show')) nextQuestion();
+    else if(document.getElementById('inputRow').style.display!=='none') submitInput();
+  }
+  // Number keys 1-4 for choices
+  if(['1','2','3','4'].includes(e.key)){
+    const btns=document.querySelectorAll('.ans-btn:not(:disabled)');
+    if(btns[+e.key-1]) btns[+e.key-1].click();
+  }
+});
+
+// =========================================================
+// START
+// =========================================================
+init();
 </script>
 </body>
 </html>
