@@ -3,201 +3,204 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Misión Estelar: Familia & Saber</title>
+    <title>Misión Estelar: Historias y Saber</title>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #a29bfe;
             --secondary: #55efc4;
             --danger: #ff7675;
+            --bible: #fbc531;
             --dark: #2d3436;
         }
 
         body, html {
             margin: 0; padding: 0; height: 100%; width: 100%;
             font-family: 'Fredoka', sans-serif;
-            background: #0f0c29; color: white; overflow: hidden;
+            background: #1e272e; color: white; overflow: hidden;
         }
 
-        /* HUD Superior */
         .hud {
             position: absolute; top: 0; width: 100%; display: flex;
             justify-content: space-between; padding: 20px; box-sizing: border-box;
-            font-size: 1.2rem; z-index: 100; pointer-events: none;
-            background: rgba(0,0,0,0.3);
+            font-size: 1.2rem; z-index: 100; background: rgba(0,0,0,0.4);
         }
 
-        .lives { color: var(--danger); font-size: 1.5rem; letter-spacing: 5px; }
+        .lives { color: var(--danger); font-size: 1.5rem; }
 
-        /* Contenedor de Juego */
         .game-screen {
             height: 100%; display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
+            align-items: center; justify-content: center; padding: 20px;
         }
 
-        .question-box {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            padding: 20px 30px; border-radius: 20px;
-            border: 2px solid var(--primary);
+        /* Caja de Preguntas e Historias */
+        .story-container {
+            background: rgba(255, 255, 255, 0.95);
+            color: var(--dark);
+            padding: 25px; border-radius: 20px;
+            max-width: 500px; width: 90%;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
             text-align: center; margin-bottom: 20px;
-            max-width: 80%;
+            display: none; /* Se activa en modo historia */
         }
 
-        #main-q { font-size: 3rem; margin: 10px 0; }
-        #sub-q { font-size: 1.2rem; color: var(--secondary); margin-bottom: 10px; }
+        .math-box {
+            text-align: center; z-index: 10;
+        }
+
+        #math-val { font-size: 5rem; text-shadow: 0 0 20px var(--primary); }
 
         /* Burbujas */
         .bubble {
-            position: absolute; width: 85px; height: 85px;
+            position: absolute; width: 90px; height: 90px;
             background: radial-gradient(circle at 30% 30%, #ffffff, var(--primary));
             border-radius: 50%; display: flex; justify-content: center;
-            align-items: center; font-size: 1.8rem; color: var(--dark);
-            font-weight: bold; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            z-index: 50;
+            align-items: center; font-size: 2rem; color: var(--dark);
+            font-weight: bold; cursor: pointer; z-index: 50;
         }
 
-        /* Opciones de respuesta (Para Biblia e Inglés) */
-        .options-grid {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
-            width: 90%; max-width: 400px;
+        /* Opciones */
+        .options-area {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%;
         }
 
         .opt-btn {
-            background: white; color: var(--dark); border: none;
-            padding: 15px; border-radius: 15px; font-size: 1rem;
-            font-weight: bold; cursor: pointer; transition: 0.2s;
+            background: var(--dark); color: white; border: none;
+            padding: 15px; border-radius: 12px; font-size: 1.1rem;
+            cursor: pointer; font-family: 'Fredoka';
         }
-
-        .opt-btn:active { transform: scale(0.95); }
 
         /* Modales */
         .modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9); display: none;
+            background: rgba(0,0,0,0.95); display: none;
             flex-direction: column; align-items: center; justify-content: center;
-            z-index: 500; text-align: center; padding: 20px;
+            z-index: 1000; text-align: center;
         }
 
-        .modal-content {
-            background: white; color: var(--dark); padding: 30px;
-            border-radius: 25px; border: 5px solid var(--danger);
-        }
-
-        .btn-accept {
-            background: var(--dark); color: white; padding: 10px 30px;
-            border-radius: 10px; border: none; font-size: 1.2rem;
-            margin-top: 20px; cursor: pointer;
+        .modal-card {
+            background: white; color: var(--dark); padding: 40px;
+            border-radius: 30px; border: 8px solid var(--danger); width: 80%;
         }
 
         #start-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--dark); z-index: 600; display: flex;
+            background: var(--dark); z-index: 2000; display: flex;
             flex-direction: column; align-items: center; justify-content: center;
-        }
-
-        .btn-play {
-            background: var(--secondary); color: var(--dark);
-            padding: 20px 50px; font-size: 2rem; border-radius: 50px;
-            border: none; cursor: pointer; font-weight: bold;
         }
     </style>
 </head>
 <body>
 
 <div id="start-screen">
-    <h1 style="color: var(--primary);">🌟 SUPER MISIÓN 🌟</h1>
-    <p>Matemáticas • Inglés • Biblia</p>
-    <button class="btn-play" onclick="init()">EMPEZAR</button>
+    <h1 style="color: var(--secondary); font-size: 3rem;">✨ MEGA JUEGO ✨</h1>
+    <p>Tablas • Inglés • Historias de la Biblia</p>
+    <button onclick="startGame()" style="padding: 20px 60px; font-size: 2rem; border-radius: 50px; border: none; background: var(--secondary); cursor: pointer;">JUGAR</button>
 </div>
 
 <div class="hud">
-    <div>XP: <span id="xp">0</span></div>
-    <div class="lives" id="lives-display">❤️❤️❤️</div>
+    <div>XP: <span id="xp-val">0</span></div>
+    <div class="lives" id="hearts">❤️❤️❤️</div>
 </div>
 
-<div class="game-screen" id="game-screen">
-    <div class="question-box" id="q-box">
-        <div id="sub-q">Cargando...</div>
-        <div id="main-q">?</div>
+<div class="game-screen">
+    <div id="math-zone" class="math-box">
+        <p id="math-eng-hint" style="color: var(--primary); font-size: 1.5rem;"></p>
+        <div id="math-val">? x ?</div>
     </div>
-    <div class="options-grid" id="options-area"></div>
+
+    <div id="story-zone" class="story-container">
+        <h3 id="story-title" style="margin-top:0; color: var(--primary);"></h3>
+        <p id="story-text" style="font-size: 1.1rem; line-height: 1.4; color: #444;"></p>
+        <hr>
+        <p id="story-question" style="font-weight: bold; font-size: 1.2rem;"></p>
+        <div class="options-area" id="options-area"></div>
+    </div>
 </div>
 
-<div class="modal" id="papa-modal">
-    <div class="modal-content">
-        <h2 style="color: var(--danger);">🚨 ¡CUIDADO! 🚨</h2>
-        <p style="font-size: 1.3rem;"><b>Tu papá está viendo el puntaje y te va a poner una <span style="font-size: 2rem;">X</span> en la nevera.</b></p>
-        <p>¡Concéntrate más!</p>
-        <button class="btn-accept" onclick="closePapaModal()">LO SIENTO, ACEPTO</button>
+<div class="modal" id="alert-modal">
+    <div class="modal-card">
+        <h1 style="color: var(--danger);">🚨 ¡ALERTA! 🚨</h1>
+        <p style="font-size: 1.5rem;">Tu papá está viendo el puntaje y te va a poner una <b>X</b> en la nevera.</p>
+        <button onclick="closeModal()" style="background: var(--dark); color: white; padding: 15px 40px; border: none; border-radius: 10px; font-size: 1.2rem; cursor: pointer;">ACEPTO EL RETO</button>
     </div>
 </div>
 
 <script>
     let xp = 0;
     let lives = 3;
-    let currentCorrect = null;
-    let gameType = 'math'; // 'math', 'english', 'bible'
+    let currentCorrect = "";
     
-    const bibleQuestions = [
-        { q: "¿Quién construyó el Arca?", a: "Noé", opts: ["Moisés", "Noé", "David", "Adán"] },
-        { q: "¿Quién venció al gigante Goliat?", a: "David", opts: ["David", "Salomón", "Sansón", "Saúl"] },
-        { q: "¿Cuántos días tardó Dios en crear el mundo?", a: "6", opts: ["7", "6", "10", "3"] },
-        { q: "¿Quién fue el primer hombre?", a: "Adán", opts: ["Jesús", "Adán", "Abrahán", "Pedro"] }
+    const bibleAdventures = [
+        {
+            title: "José y su Túnica",
+            text: "Jacob amaba mucho a su hijo José y le regaló una túnica de muchos colores. Sus hermanos estaban celosos, pero José sabía que Dios tenía un plan para él a través de sus sueños.",
+            q: "¿De qué colores era la túnica que le regaló su padre a José?",
+            ans: "Muchos colores",
+            opts: ["Azul solamente", "Muchos colores", "Blanca", "Verde"]
+        },
+        {
+            title: "Jonás y el Gran Pez",
+            text: "Jonás no quiso obedecer a Dios y huyó en un barco. Se desató una tormenta y Jonás terminó en el mar, donde un gran pez se lo tragó y estuvo allí por 3 días.",
+            q: "¿Cuántos días estuvo Jonás dentro del gran pez?",
+            ans: "3 días",
+            opts: ["1 día", "3 días", "7 días", "5 días"]
+        },
+        {
+            title: "Moisés y el Mar",
+            text: "El pueblo de Dios estaba atrapado frente al Mar Rojo. Moisés levantó su vara, Dios envió un viento fuerte y el mar se dividió en dos para que todos cruzaran por tierra seca.",
+            q: "¿Qué usó Moisés para que el mar se abriera?",
+            ans: "Su vara",
+            opts: ["Su vara", "Una espada", "Un barco", "Una piedra"]
+        }
     ];
 
-    const englishQuestions = [
-        { q: "How do you say 'Hola'?", a: "Hello", opts: ["Bye", "Hello", "Thanks", "Dog"] },
-        { q: "What color is the sky?", a: "Blue", opts: ["Red", "Green", "Blue", "Yellow"] },
-        { q: "How do you say 'Manzana'?", a: "Apple", opts: ["Pear", "Grape", "Apple", "Orange"] },
-        { q: "What is 'Dog'?", a: "Perro", opts: ["Gato", "Perro", "Pájaro", "Pez"] }
+    const engQuiz = [
+        { q: "How do you say 'Gato' in English?", ans: "Cat", opts: ["Dog", "Cat", "Bird", "Fish"] },
+        { q: "What color is an apple (Manzana)?", ans: "Red", opts: ["Blue", "Yellow", "Red", "Pink"] },
+        { q: "Translate: 'Te amo papá'", ans: "I love you dad", opts: ["Hello dad", "I love you dad", "Goodbye dad", "Thanks dad"] }
     ];
 
-    function init() {
+    const engNums = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve"];
+
+    function startGame() {
         document.getElementById('start-screen').style.display = 'none';
         nextRound();
     }
 
     function nextRound() {
-        // Limpiar área
+        // Limpiar todo
+        document.getElementById('math-zone').style.display = 'none';
+        document.getElementById('story-zone').style.display = 'none';
         document.getElementById('options-area').innerHTML = '';
         const bubbles = document.querySelectorAll('.bubble');
         bubbles.forEach(b => b.remove());
 
-        // Elegir tipo de juego aleatorio
-        const rand = Math.random();
-        if (rand < 0.5) gameType = 'math';
-        else if (rand < 0.75) gameType = 'english';
-        else gameType = 'bible';
-
-        if (gameType === 'math') {
-            setupMath();
-        } else {
-            setupQuiz();
-        }
+        let type = Math.random();
+        if(type < 0.4) setupMath();
+        else if(type < 0.7) setupBible();
+        else setupEnglish();
     }
 
     function setupMath() {
-        const n1 = Math.floor(Math.random() * 9) + 2;
-        const n2 = Math.floor(Math.random() * 9) + 1;
+        document.getElementById('math-zone').style.display = 'block';
+        let n1 = Math.floor(Math.random() * 8) + 2;
+        let n2 = Math.floor(Math.random() * 9) + 1;
         currentCorrect = n1 * n2;
-
-        document.getElementById('sub-q').innerText = "TABLAS DE MULTIPLICAR";
-        document.getElementById('main-q').innerText = `${n1} x ${n2}`;
         
-        // Voz en inglés de la tabla
-        const talk = new SpeechSynthesisUtterance(`${n1} times ${n2}`);
+        document.getElementById('math-val').innerText = `${n1} x ${n2}`;
+        document.getElementById('math-eng-hint').innerText = `${engNums[n1]} times ${engNums[n2]}`;
+        
+        // Voz
+        let talk = new SpeechSynthesisUtterance(`${engNums[n1]} times ${engNums[n2]}`);
         talk.lang = 'en-US';
         window.speechSynthesis.speak(talk);
 
-        spawnBubbles(currentCorrect);
-    }
-
-    function spawnBubbles(correct) {
-        let options = [correct];
+        // Burbujas lentas
+        let options = [currentCorrect];
         while(options.length < 4) {
-            let fake = (Math.floor(Math.random()*9)+2) * (Math.floor(Math.random()*9)+1);
-            if(!options.includes(fake)) options.push(fake);
+            let f = (Math.floor(Math.random()*9)+1) * (Math.floor(Math.random()*9)+1);
+            if(!options.includes(f)) options.push(f);
         }
         options.sort(() => Math.random() - 0.5);
 
@@ -206,9 +209,8 @@
             b.className = 'bubble';
             b.innerText = val;
             b.style.left = (15 + (i * 20)) + '%';
-            
             let pos = 110;
-            let speed = 0.2 + (Math.random() * 0.2); // BURBUJAS MÁS LENTAS
+            let speed = 0.15 + (Math.random() * 0.15); // MUY LENTAS
 
             function move() {
                 pos -= speed;
@@ -216,71 +218,70 @@
                 if(pos < -15) pos = 110;
                 if(b.parentNode) requestAnimationFrame(move);
             }
-            
-            b.onclick = () => {
-                if(val === correct) {
-                    winPoint();
-                } else {
-                    failLife();
-                }
-            };
+            b.onclick = () => (val === currentCorrect) ? win() : fail();
             document.body.appendChild(b);
             move();
         });
     }
 
-    function setupQuiz() {
-        const list = (gameType === 'english') ? englishQuestions : bibleQuestions;
-        const item = list[Math.floor(Math.random() * list.length)];
+    function setupBible() {
+        const zone = document.getElementById('story-zone');
+        zone.style.display = 'block';
+        const story = bibleAdventures[Math.floor(Math.random()*bibleAdventures.length)];
         
-        document.getElementById('sub-q').innerText = gameType.toUpperCase();
-        document.getElementById('main-q').innerText = item.q;
-        currentCorrect = item.a;
+        document.getElementById('story-title').innerText = "📖 HISTORIA BÍBLICA";
+        document.getElementById('story-text').innerText = story.text;
+        document.getElementById('story-question').innerText = story.q;
+        currentCorrect = story.ans;
 
-        item.opts.forEach(opt => {
-            const btn = document.createElement('button');
-            btn.className = 'opt-btn';
-            btn.innerText = opt;
-            btn.onclick = () => {
-                if(opt === currentCorrect) winPoint();
-                else failLife();
-            };
-            document.getElementById('options-area').appendChild(btn);
-        });
+        story.opts.forEach(o => createOpt(o));
     }
 
-    function winPoint() {
+    function setupEnglish() {
+        const zone = document.getElementById('story-zone');
+        zone.style.display = 'block';
+        const item = engQuiz[Math.floor(Math.random()*engQuiz.length)];
+        
+        document.getElementById('story-title').innerText = "🇬🇧 ENGLISH TIME";
+        document.getElementById('story-text').innerText = "Lee la pregunta y elige la respuesta correcta.";
+        document.getElementById('story-question').innerText = item.q;
+        currentCorrect = item.ans;
+
+        item.opts.forEach(o => createOpt(o));
+    }
+
+    function createOpt(text) {
+        const btn = document.createElement('button');
+        btn.className = 'opt-btn';
+        btn.innerText = text;
+        btn.onclick = () => (text === currentCorrect) ? win() : fail();
+        document.getElementById('options-area').appendChild(btn);
+    }
+
+    function win() {
         xp += 10;
-        document.getElementById('xp').innerText = xp;
-        document.getElementById('q-box').style.borderColor = 'var(--secondary)';
-        setTimeout(nextRound, 600);
+        document.getElementById('xp-val').innerText = xp;
+        nextRound();
     }
 
-    function failLife() {
+    function fail() {
         lives--;
-        updateLives();
-        document.getElementById('papa-modal').style.display = 'flex';
-    }
-
-    function updateLives() {
-        const display = "❤️".repeat(lives) + "🖤".repeat(3 - lives);
-        document.getElementById('lives-display').innerText = display;
+        updateHearts();
+        document.getElementById('alert-modal').style.display = 'flex';
         if(lives <= 0) {
-            alert("¡GAME OVER! Vamos a estudiar un poco más con papá.");
+            alert("¡Oh no! Has perdido tus corazones. ¡Vuelve a intentarlo!");
             location.reload();
         }
     }
 
-    function closePapaModal() {
-        document.getElementById('papa-modal').style.display = 'none';
+    function closeModal() {
+        document.getElementById('alert-modal').style.display = 'none';
         nextRound();
     }
 
-    function updateLives() {
-        const display = "❤️".repeat(Math.max(0, lives)) + "🖤".repeat(Math.max(0, 3 - lives));
-        document.getElementById('lives-display').innerText = display;
+    function updateHearts() {
+        document.getElementById('hearts').innerText = "❤️".repeat(lives) + "🖤".repeat(3-lives);
     }
-
 </script>
 </body>
 </html>
