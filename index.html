@@ -1,140 +1,260 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Math Forest Adventure</title>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@700&display=swap" rel="stylesheet">
+    <title>Math & Stories Adventure</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; font-family: 'Fredoka', sans-serif; background: #0f0c29; }
-        #canvas-bg { position: fixed; top: 0; left: 0; z-index: -1; }
-        .ui-layer { position: relative; z-index: 10; pointer-events: none; color: white; padding: 20px; display: flex; justify-content: space-between; }
-        .question-box { position: absolute; top: 20%; left: 50%; transform: translate(-50%, -50%); text-align: center; pointer-events: none; }
-        .math-q { font-size: 5rem; text-shadow: 0 0 20px #00d2ff; margin: 0; }
-        .eng-q { font-size: 1.5rem; color: #00d2ff; opacity: 0.8; }
-        .bubble { 
-            position: absolute; width: 100px; height: 100px; background: rgba(255,255,255,0.2); 
-            border: 3px solid rgba(255,255,255,0.5); border-radius: 50%; display: flex; 
-            justify-content: center; align-items: center; font-size: 2.5rem; color: white; 
-            cursor: pointer; pointer-events: auto; backdrop-filter: blur(5px);
-            box-shadow: 0 0 20px rgba(0,210,255,0.4); transition: transform 0.1s;
+        :root {
+            --primary: #ff007f;
+            --secondary: #00d2ff;
+            --forest: #00b894;
+            --dark: #1a1a2e;
         }
-        .bubble:active { transform: scale(0.9); }
-        #start-btn { 
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            padding: 20px 50px; font-size: 2rem; background: #00d2ff; border: none; 
-            border-radius: 50px; color: white; cursor: pointer; z-index: 100;
-            box-shadow: 0 0 30px #00d2ff;
+
+        body, html {
+            margin: 0; padding: 0; height: 100%; width: 100%;
+            font-family: 'Fredoka', sans-serif;
+            background: var(--dark);
+            color: white; overflow: hidden;
+        }
+
+        /* Fondo de Galaxia Animado */
+        #stars-canvas { position: fixed; top:0; left:0; z-index: -1; }
+
+        .hud {
+            position: absolute; top: 0; width: 100%; display: flex;
+            justify-content: space-between; padding: 20px; box-sizing: border-box;
+            font-size: 1.5rem; z-index: 100; pointer-events: none;
+        }
+
+        .game-screen {
+            height: 100%; display: flex; flex-direction: column;
+            align-items: center; justify-content: flex-start; padding-top: 80px;
+        }
+
+        .question-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 20px 40px; border-radius: 30px;
+            border: 2px solid var(--secondary);
+            text-align: center; box-shadow: 0 0 30px rgba(0, 210, 255, 0.3);
+            margin-bottom: 20px;
+        }
+
+        .math-text { font-size: 4rem; margin: 0; color: white; }
+        .eng-sub { font-size: 1.2rem; color: var(--secondary); }
+
+        /* Burbujas */
+        .bubble {
+            position: absolute; width: 90px; height: 90px;
+            background: radial-gradient(circle at 30% 30%, white, var(--secondary));
+            border-radius: 50%; display: flex; justify-content: center;
+            align-items: center; font-size: 2rem; color: var(--dark);
+            font-weight: bold; cursor: pointer;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            z-index: 50; transition: transform 0.1s;
+        }
+
+        /* Modal de Acertijo / Boss */
+        .portal {
+            position: fixed; top:0; left:0; width:100%; height:100%;
+            background: rgba(26, 26, 46, 0.95);
+            display: none; flex-direction: column;
+            align-items: center; justify-content: center; z-index: 200;
+            padding: 20px; text-align: center;
+        }
+
+        .portal-content {
+            background: white; color: var(--dark);
+            padding: 30px; border-radius: 30px; border: 5px solid var(--primary);
+            max-width: 500px; width: 90%;
+        }
+
+        .portal input {
+            width: 120px; font-size: 2.5rem; border: 3px solid var(--primary);
+            border-radius: 15px; text-align: center; margin: 20px;
+        }
+
+        #start-screen {
+            position: fixed; top:0; left:0; width:100%; height:100%;
+            background: var(--dark); z-index: 300;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+
+        .btn-start {
+            padding: 20px 60px; font-size: 2rem; background: var(--primary);
+            border: none; border-radius: 50px; color: white; cursor: pointer;
+            box-shadow: 0 0 30px var(--primary);
         }
     </style>
 </head>
 <body>
 
-<canvas id="canvas-bg"></canvas>
-<button id="start-btn" onclick="init()">START MISSION 🚀</button>
+<canvas id="stars-canvas"></canvas>
 
-<div class="ui-layer">
-    <div id="score">XP: 0</div>
-    <div id="lives">❤️❤️❤️</div>
+<div id="start-screen">
+    <h1 style="font-size: 3rem; color: var(--secondary);">✨ Misión Galáctica ✨</h1>
+    <p>Math & Stories Bilingüe</p>
+    <button class="btn-start" onclick="startGame()">¡DESPEGAR!</button>
 </div>
 
-<div class="question-box">
-    <div class="eng-q" id="eng-q">Ready?</div>
-    <div class="math-q" id="math-q">? x ?</div>
+<div class="hud">
+    <div>Nivel: <span id="lvl">1</span></div>
+    <div>XP: <span id="xp">0</span> 🌟</div>
+</div>
+
+<div class="game-screen">
+    <div class="question-card">
+        <div class="eng-sub" id="eng-q">Ready?</div>
+        <div class="math-text" id="math-q">? x ?</div>
+    </div>
+</div>
+
+<div class="portal" id="portal">
+    <div class="portal-content">
+        <h2 id="portal-title">📖 ¡Mini Historia!</h2>
+        <p id="riddle-esp" style="font-size: 1.2rem; font-weight: bold;"></p>
+        <p id="riddle-eng" style="font-style: italic; color: #555;"></p>
+        <input type="number" id="riddle-input" placeholder="?">
+        <br>
+        <button class="btn-start" style="font-size: 1.2rem; padding: 10px 30px;" onclick="checkRiddle()">Resolver Portal</button>
+    </div>
 </div>
 
 <script>
-    let score = 0;
+    let xp = 0;
     let n1, n2, correct;
-    const colors = ['#00d2ff', '#92fe9d', '#ff7675', '#fdcb6e'];
     const engNums = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve"];
+    
+    const riddles = [
+        { esp: "Un pulpo tiene 8 brazos. Si hay 3 pulpos bailando, ¿cuántos brazos hay?", eng: "An octopus has 8 arms. If there are 3 octopuses dancing, how many arms?", ans: 24 },
+        { esp: "Cada caja de galletas tiene 6 galletas. Si compras 5 cajas, ¿cuántas tienes?", eng: "Each cookie box has 6 cookies. If you buy 5 boxes, how many do you have?", ans: 30 },
+        { esp: "Un gato come 2 peces al día. Si tienes 7 gatos, ¿cuántos peces necesitas?", eng: "A cat eats 2 fish a day. If you have 7 cats, how many fish do you need?", ans: 14 }
+    ];
 
-    function init() {
-        document.getElementById('start-btn').style.display = 'none';
+    function startGame() {
+        document.getElementById('start-screen').style.display = 'none';
         nextQuestion();
-        animate();
+        drawStars();
+    }
+
+    function speak(text) {
+        const utter = new SpeechSynthesisUtterance(text);
+        utter.lang = 'en-US';
+        utter.rate = 0.9;
+        window.speechSynthesis.speak(utter);
     }
 
     function nextQuestion() {
-        n1 = Math.floor(Math.random() * 9) + 2;
-        n2 = Math.floor(Math.random() * 10) + 1;
+        // Cada 5 puntos, un acertijo
+        if (xp > 0 && xp % 50 === 0) {
+            triggerPortal();
+            return;
+        }
+
+        n1 = Math.floor(Math.random() * 8) + 2;
+        n2 = Math.floor(Math.random() * 9) + 1;
         correct = n1 * n2;
-        
+
         document.getElementById('math-q').innerText = `${n1} x ${n2}`;
         document.getElementById('eng-q').innerText = `${engNums[n1]} times ${engNums[n2]}`;
+        speak(`${engNums[n1]} times ${engNums[n2]}`);
         
-        // Voz en Inglés
-        const talk = new SpeechSynthesisUtterance(`${engNums[n1]} times ${engNums[n2]}`);
-        talk.lang = 'en-US';
-        window.speechSynthesis.speak(talk);
-
-        createBubbles();
+        spawnBubbles();
     }
 
-    function createBubbles() {
+    function spawnBubbles() {
         const existing = document.querySelectorAll('.bubble');
         existing.forEach(b => b.remove());
 
         let options = [correct];
         while(options.length < 4) {
-            let fake = (Math.floor(Math.random()*10)+1) * (Math.floor(Math.random()*10)+1);
+            let fake = (Math.floor(Math.random()*9)+2) * (Math.floor(Math.random()*9)+1);
             if(!options.includes(fake)) options.push(fake);
         }
         options.sort(() => Math.random() - 0.5);
 
-        options.forEach((opt, i) => {
+        options.forEach((val, i) => {
             const b = document.createElement('div');
             b.className = 'bubble';
-            b.innerText = opt;
-            b.style.left = (20 + (i * 20)) + '%';
+            b.innerText = val;
+            b.style.left = (15 + (i * 20)) + '%';
             b.style.top = '100%';
             
-            // Animación de subida
             let pos = 100;
-            let speed = 0.5 + (Math.random() * 0.5);
-            let drift = Math.sin(i) * 2;
+            let speed = 0.4 + (Math.random() * 0.4);
 
             function move() {
-                if (pos < -20) { pos = 110; } // Reaparece abajo
                 pos -= speed;
                 b.style.top = pos + '%';
-                b.style.transform = `translateX(${Math.sin(pos/10) * 20}px)`;
-                if (b.parentNode) requestAnimationFrame(move);
+                b.style.transform = `translateX(${Math.sin(pos/10)*15}px)`;
+                if(pos < -15) pos = 105; // Loop
+                if(b.parentNode) requestAnimationFrame(move);
             }
             
             b.onclick = () => {
-                if(opt === correct) {
-                    score += 10;
-                    document.getElementById('score').innerText = `XP: ${score}`;
-                    b.style.background = "#00ffcc";
+                if(val === correct) {
+                    xp += 10;
+                    document.getElementById('xp').innerText = xp;
+                    b.style.background = "var(--forest)";
+                    speak("Correct!");
                     setTimeout(nextQuestion, 500);
                 } else {
-                    b.style.background = "#ff2a2a";
-                    setTimeout(() => b.style.background = "rgba(255,255,255,0.2)", 500);
+                    b.style.transform = "scale(0.8)";
+                    b.style.opacity = "0.5";
                 }
             };
-
             document.body.appendChild(b);
             move();
         });
     }
 
-    // Fondo de estrellas animado
-    const canvas = document.getElementById('canvas-bg');
-    const ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    function triggerPortal() {
+        const p = document.getElementById('portal');
+        const r = riddles[Math.floor(Math.random()*riddles.length)];
+        document.getElementById('riddle-esp').innerText = r.esp;
+        document.getElementById('riddle-eng').innerText = r.eng;
+        document.getElementById('riddle-input').value = '';
+        p.style.display = 'flex';
+        p.dataset.ans = r.ans;
+        speak(r.eng);
+    }
 
-    function animate() {
-        ctx.fillStyle = 'rgba(15, 12, 41, 0.2)';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        for(let i=0; i<5; i++) {
-            ctx.fillStyle = 'white';
-            ctx.beginPath();
-            ctx.arc(Math.random()*canvas.width, Math.random()*canvas.height, Math.random()*2, 0, Math.PI*2);
-            ctx.fill();
+    function checkRiddle() {
+        const val = parseInt(document.getElementById('riddle-input').value);
+        const ans = parseInt(document.getElementById('portal').dataset.ans);
+        if(val === ans) {
+            xp += 10; // Extra XP
+            document.getElementById('xp').innerText = xp;
+            document.getElementById('portal').style.display = 'none';
+            nextQuestion();
+        } else {
+            document.querySelector('.portal-content').style.borderColor = 'red';
+            setTimeout(() => document.querySelector('.portal-content').style.borderColor = 'var(--primary)', 500);
         }
-        requestAnimationFrame(animate);
+    }
+
+    // Fondo Espacial
+    function drawStars() {
+        const canvas = document.getElementById('stars-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        function anim() {
+            ctx.fillStyle = 'rgba(26, 26, 46, 0.1)';
+            ctx.fillRect(0,0,canvas.width, canvas.height);
+            ctx.fillStyle = 'white';
+            for(let i=0; i<3; i++) {
+                ctx.beginPath();
+                ctx.arc(Math.random()*canvas.width, Math.random()*canvas.height, Math.random()*2, 0, Math.PI*2);
+                ctx.fill();
+            }
+            requestAnimationFrame(anim);
+        }
+        anim();
     }
 </script>
 </body>
